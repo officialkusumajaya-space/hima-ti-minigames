@@ -3,423 +3,238 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>HIMA TI OSPEK 2026</title>
+<title>HIMA TI - Stand OSPEK 2026</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  :root {
-    --bg: #0c0f1a;
-    --surface: #151929;
-    --border: #1f2540;
-    --text: #e2e4ed;
-    --muted: #6b7094;
-    --green: #34d399;
-    --red: #f87171;
-    --amber: #fbbf24;
-    --blue: #60a5fa;
-    --purple: #a78bfa;
-  }
-  body {
-    font-family: system-ui, -apple-system, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100dvh;
-    -webkit-font-smoothing: antialiased;
-  }
-  .page { display: none; min-height: 100dvh; }
-  .page.active { display: flex; flex-direction: column; }
-  .overlay {
-    display: none;
-    position: fixed; inset: 0;
-    z-index: 50;
-    background: rgba(0,0,0,.75);
-    backdrop-filter: blur(4px);
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-  }
-  .overlay.active { display: flex; }
-
-  /* Cards */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-  }
-
-  /* Buttons */
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    padding: .75rem 1.5rem;
-    border-radius: 10px;
-    border: none;
-    font-weight: 600;
-    font-size: .95rem;
-    cursor: pointer;
-    transition: transform .1s, opacity .15s;
-  }
-  .btn:active { transform: scale(.97); }
-  .btn-green { background: var(--green); color: #000; }
-  .btn-blue { background: var(--blue); color: #000; }
-  .btn-ghost { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
-
-  /* Inputs */
-  input[type="text"] {
-    width: 100%;
-    background: var(--bg);
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    padding: .85rem 1rem;
-    font-size: 1rem;
-    color: var(--text);
-    outline: none;
-    transition: border-color .15s;
-  }
-  input[type="text"]:focus { border-color: var(--blue); }
-
-  /* Animations */
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .slide-up { animation: slideUp .25s ease-out; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:monospace;background:#111;color:#ddd;min-height:100dvh}
+a,button{font-family:inherit;cursor:pointer}
+input{font-family:inherit}
+.page{display:none;min-height:100dvh;flex-direction:column}
+.page.on{display:flex}
+.ov{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.8);justify-content:center;align-items:center;padding:1rem}
+.ov.on{display:flex}
+.wrap{max-width:400px;margin:0 auto;padding:1.5rem 1rem;width:100%}
+.item{display:block;width:100%;background:#1a1a1a;border:1px solid #2a2a2a;padding:1rem 1.25rem;margin-bottom:.5rem;text-align:left;color:#ddd;border-radius:6px}
+.item:hover{background:#222}
+.item b{display:block;font-size:1rem;margin-bottom:.15rem}
+.item small{color:#777}
+.btn{display:inline-block;padding:.7rem 1.4rem;border:none;border-radius:5px;font-weight:700;font-size:.9rem}
+.btn-g{background:#2d6;color:#000}
+.btn-b{background:#39f;color:#000}
+.btn-x{background:#222;color:#888;border:1px solid #333}
+h1{font-size:1.3rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase}
+.inp{width:100%;background:#111;border:1px solid #333;padding:.75rem 1rem;font-size:1rem;color:#ddd;border-radius:4px;outline:none}
+.inp:focus{border-color:#39f}
+.tag{display:inline-block;background:#1a2a1a;border:1px solid #2a3a2a;color:#6a6;padding:.15rem .5rem;border-radius:3px;font-size:.75rem}
 </style>
 </head>
 <body>
 
 <!-- HOME -->
-<div id="page-home" class="page active">
-  <div style="max-width:24rem; margin:auto; padding:2rem 1rem; width:100%;">
-    <div style="text-align:center; margin-bottom:2rem;">
-      <h1 style="font-size:1.4rem; font-weight:800; letter-spacing:-.02em;">HIMA TI</h1>
-      <p style="color:var(--muted); font-size:.85rem; margin-top:.25rem;">OSPEK 2026 &mdash; Stand Minigames</p>
-    </div>
-
-    <div style="display:flex; flex-direction:column; gap:.75rem;">
-      <button onclick="openGame('reaction')" class="card" style="display:flex; align-items:center; gap:1rem; padding:1.25rem; text-align:left; cursor:pointer; border:1px solid var(--border); color:var(--text);">
-        <div style="width:44px; height:44px; background:#1e1b4b; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">&#9889;</div>
-        <div style="flex:1; min-width:0;">
-          <div style="font-weight:700; font-size:1rem;">Reaction Time</div>
-          <div style="color:var(--muted); font-size:.8rem; margin-top:.15rem;">Menang: reaksi &lt; 350ms</div>
-        </div>
-      </button>
-
-      <button onclick="openGame('logo')" class="card" style="display:flex; align-items:center; gap:1rem; padding:1.25rem; text-align:left; cursor:pointer; border:1px solid var(--border); color:var(--text);">
-        <div style="width:44px; height:44px; background:#064e3b; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">&#128270;</div>
-        <div style="flex:1; min-width:0;">
-          <div style="font-weight:700; font-size:1rem;">Tebak Logo</div>
-          <div style="color:var(--muted); font-size:.8rem; margin-top:.15rem;">Menang: tebak 7 dari 10</div>
-        </div>
-      </button>
-
-      <button onclick="openGame('typing')" class="card" style="display:flex; align-items:center; gap:1rem; padding:1.25rem; text-align:left; cursor:pointer; border:1px solid var(--border); color:var(--text);">
-        <div style="width:44px; height:44px; background:#451a03; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">&#9000;</div>
-        <div style="flex:1; min-width:0;">
-          <div style="font-weight:700; font-size:1rem;">Typing Race</div>
-          <div style="color:var(--muted); font-size:.8rem; margin-top:.15rem;">Menang: ketik &gt; 30 WPM</div>
-        </div>
-      </button>
-    </div>
-
-    <div class="card" style="margin-top:1.5rem; padding:1rem;">
-      <div style="font-size:.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.75rem;">Skor hari ini</div>
-      <div id="lb"><div style="color:var(--muted); font-size:.85rem;">Belum ada</div></div>
-    </div>
-
-    <p style="text-align:center; color:var(--muted); font-size:.7rem; margin-top:1.5rem;">HIMA TI &bull; 2026</p>
+<div id="p-home" class="page on">
+<div class="wrap">
+  <div style="text-align:center;margin-bottom:2rem;padding-top:2rem">
+    <h1>HIMA TI</h1>
+    <div style="color:#555;font-size:.8rem;margin-top:.3rem">stand ospek &mdash; main &amp; menang</div>
   </div>
+
+  <a class="item" onclick="go('reaction')">
+    <b>Reaction Time</b>
+    <small>ketuk saat layar hijau &bull; menang &lt; 350ms</small>
+  </a>
+  <a class="item" onclick="go('logo')">
+    <b>Tebak Logo</b>
+    <small>tebak brand dari teks blur &bull; menang &ge; 7/10</small>
+  </a>
+  <a class="item" onclick="go('typing')">
+    <b>Typing Race</b>
+    <small>ketik kalimat secepat mungkin &bull; menang &gt; 30 WPM</small>
+  </a>
+
+  <div style="margin-top:2rem;border-top:1px solid #222;padding-top:1rem">
+    <div style="font-size:.7rem;color:#555;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem">skor hari ini</div>
+    <div id="lb" style="color:#555;font-size:.8rem">belum ada</div>
+  </div>
+
+  <div style="text-align:center;margin-top:2rem;color:#333;font-size:.7rem">HIMA TI &bull; 2026</div>
+</div>
 </div>
 
 <!-- REACTION -->
-<div id="page-reaction" class="page">
-  <div style="max-width:24rem; margin:auto; padding:1rem; width:100%; position:relative;">
-    <button onclick="goHome()" style="background:none; border:none; color:var(--muted); font-size:.85rem; cursor:pointer; padding:.25rem;">&larr; Kembali</button>
-    <div id="rx-box" class="card" style="margin-top:1rem; aspect-ratio:1/1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; cursor:pointer; background:var(--surface); -webkit-user-select:none; user-select:none; -webkit-tap-highlight-color:transparent; transition: background .08s;">
-      <div id="rx-text" style="font-size:1.25rem; font-weight:700;">Ketuk untuk mulai</div>
-      <div id="rx-sub" style="color:var(--muted); font-size:.8rem; margin-top:.5rem;">Tunggu warna hijau, ketuk secepat mungkin</div>
-    </div>
-    <div id="rx-result" style="display:none; text-align:center; margin-top:1.25rem;" class="slide-up">
-      <div id="rx-score" style="font-size:2.5rem; font-weight:900;"></div>
-      <div id="rx-status" style="font-weight:700; margin-top:.25rem;"></div>
-      <div style="display:flex; gap:.5rem; justify-content:center; margin-top:1rem;">
-        <button onclick="rxReset()" class="btn btn-blue">Main lagi</button>
-        <button onclick="goHome()" class="btn btn-ghost">Home</button>
-      </div>
+<div id="p-reaction" class="page">
+<div class="wrap">
+  <a onclick="go('home')" style="color:#555;font-size:.8rem;display:block;margin-bottom:1rem">&larr; kembali</a>
+  <div id="rx-box" style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer;-webkit-user-select:none;user-select:none">
+    <div id="rx-t" style="font-size:1.2rem;font-weight:700">ketuk untuk mulai</div>
+    <div id="rx-s" style="color:#555;font-size:.8rem;margin-top:.4rem">tunggu hijau, ketuk secepat mungkin</div>
+  </div>
+  <div id="rx-r" style="display:none;text-align:center;margin-top:1.25rem">
+    <div id="rx-sc" style="font-size:2.2rem;font-weight:700"></div>
+    <div id="rx-st" style="font-weight:700;margin-top:.25rem"></div>
+    <div style="display:flex;gap:.5rem;justify-content:center;margin-top:1rem">
+      <button onclick="rxReset()" class="btn btn-b">main lagi</button>
+      <button onclick="go('home')" class="btn btn-x">home</button>
     </div>
   </div>
 </div>
+</div>
 
-<!-- LOGO QUIZ -->
-<div id="page-logo" class="page">
-  <div style="max-width:24rem; margin:auto; padding:1rem; width:100%;">
-    <button onclick="goHome()" style="background:none; border:none; color:var(--muted); font-size:.85rem; cursor:pointer; padding:.25rem;">&larr; Kembali</button>
-    <div id="lg-play">
-      <div style="display:flex; justify-content:space-between; margin-top:.75rem; margin-bottom:.75rem;">
-        <span style="color:var(--muted); font-size:.8rem;">Soal <span id="lg-num">1</span>/10</span>
-        <span style="color:var(--muted); font-size:.8rem;">Skor: <span id="lg-score">0</span></span>
-      </div>
-      <div class="card" style="padding:2.5rem; display:flex; align-items:center; justify-content:center; min-height:140px; margin-bottom:.75rem;">
-        <div id="lg-brand" style="font-size:2rem; font-weight:900; text-transform:uppercase; letter-spacing:.03em; transition:filter .4s;"></div>
-      </div>
-      <div style="width:100%; background:var(--border); border-radius:4px; height:3px; margin-bottom:.75rem;">
-        <div id="lg-bar" style="height:100%; background:var(--green); border-radius:4px; width:100%;"></div>
-      </div>
-      <div id="lg-input-area">
-        <input id="lg-input" type="text" placeholder="Brand apa ini?" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-        <button onclick="lgSubmit()" class="btn btn-green" style="width:100%; margin-top:.5rem;">Jawab</button>
-      </div>
-      <div id="lg-fb" style="display:none; text-align:center; margin-top:1rem;" class="slide-up">
-        <div id="lg-fb-text" style="font-weight:700; font-size:1.1rem;"></div>
-        <button onclick="lgNext()" class="btn btn-green" style="margin-top:.75rem;">Lanjut &rarr;</button>
-      </div>
+<!-- LOGO -->
+<div id="p-logo" class="page">
+<div class="wrap">
+  <a onclick="go('home')" style="color:#555;font-size:.8rem;display:block;margin-bottom:1rem">&larr; kembali</a>
+  <div id="lg-play">
+    <div style="display:flex;justify-content:space-between;margin-bottom:.75rem">
+      <span style="color:#555;font-size:.8rem">soal <span id="lg-n">1</span>/10</span>
+      <span style="color:#555;font-size:.8rem">skor: <span id="lg-sc">0</span></span>
     </div>
-    <div id="lg-end" style="display:none; text-align:center; padding-top:3rem;" class="slide-up">
-      <div id="lg-end-score" style="font-size:2.5rem; font-weight:900;"></div>
-      <div id="lg-end-status" style="font-weight:700; margin-top:.25rem;"></div>
-      <div style="display:flex; gap:.5rem; justify-content:center; margin-top:1.25rem;">
-        <button onclick="openGame('logo')" class="btn btn-green">Main lagi</button>
-        <button onclick="goHome()" class="btn btn-ghost">Home</button>
-      </div>
+    <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:2rem;text-align:center;min-height:120px;display:flex;align-items:center;justify-content:center;margin-bottom:.75rem">
+      <div id="lg-br" style="font-size:2rem;font-weight:900;text-transform:uppercase;transition:filter .4s"></div>
+    </div>
+    <div style="width:100%;background:#222;height:2px;border-radius:1px;margin-bottom:.75rem">
+      <div id="lg-bar" style="height:100%;background:#2d6;border-radius:1px;width:100%"></div>
+    </div>
+    <div id="lg-inp">
+      <input id="lg-i" class="inp" type="text" placeholder="brand apa?" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <button onclick="lgSub()" class="btn btn-g" style="width:100%;margin-top:.4rem">jawab</button>
+    </div>
+    <div id="lg-fb" style="display:none;text-align:center;margin-top:1rem">
+      <div id="lg-ft" style="font-weight:700;font-size:1.1rem"></div>
+      <button onclick="lgNext()" class="btn btn-g" style="margin-top:.75rem">lanjut &rarr;</button>
     </div>
   </div>
+  <div id="lg-end" style="display:none;text-align:center;padding-top:3rem">
+    <div id="lg-es" style="font-size:2.2rem;font-weight:700"></div>
+    <div id="lg-est" style="font-weight:700;margin-top:.25rem"></div>
+    <div style="display:flex;gap:.5rem;justify-content:center;margin-top:1.25rem">
+      <button onclick="go('logo')" class="btn btn-g">main lagi</button>
+      <button onclick="go('home')" class="btn btn-x">home</button>
+    </div>
+  </div>
+</div>
 </div>
 
 <!-- TYPING -->
-<div id="page-typing" class="page">
-  <div style="max-width:24rem; margin:auto; padding:1rem; width:100%;">
-    <button onclick="goHome()" style="background:none; border:none; color:var(--muted); font-size:.85rem; cursor:pointer; padding:.25rem;">&larr; Kembali</button>
-    <div id="ty-play">
-      <div style="display:flex; justify-content:space-between; margin-top:.75rem; margin-bottom:.75rem;">
-        <span style="color:var(--muted); font-size:.8rem;">WPM: <span id="ty-wpm">0</span></span>
-        <span style="color:var(--muted); font-size:.8rem;">Waktu: <span id="ty-time">0.0</span>s</span>
-      </div>
-      <div id="ty-text" class="card" style="padding:1.25rem; font-size:1rem; line-height:1.6; font-family:monospace; margin-bottom:.75rem;"></div>
-      <input id="ty-input" type="text" placeholder="Ketik di sini..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-      <div style="color:var(--muted); font-size:.75rem; text-align:center; margin-top:.4rem;">Ketuk kolom lalu mulai mengetik</div>
+<div id="p-typing" class="page">
+<div class="wrap">
+  <a onclick="go('home')" style="color:#555;font-size:.8rem;display:block;margin-bottom:1rem">&larr; kembali</a>
+  <div id="ty-play">
+    <div style="display:flex;justify-content:space-between;margin-bottom:.75rem">
+      <span style="color:#555;font-size:.8rem">wpm: <span id="ty-w">0</span></span>
+      <span style="color:#555;font-size:.8rem">waktu: <span id="ty-t">0.0</span>s</span>
     </div>
-    <div id="ty-end" style="display:none; text-align:center; padding-top:3rem;" class="slide-up">
-      <div id="ty-end-wpm" style="font-size:2.5rem; font-weight:900;"></div>
-      <div style="color:var(--muted); font-size:.8rem;">WPM</div>
-      <div id="ty-end-time" style="color:var(--muted); font-size:.85rem; margin-top:.25rem;"></div>
-      <div id="ty-end-status" style="font-weight:700; margin-top:.25rem;"></div>
-      <div style="display:flex; gap:.5rem; justify-content:center; margin-top:1.25rem;">
-        <button onclick="openGame('typing')" class="btn btn-blue">Main lagi</button>
-        <button onclick="goHome()" class="btn btn-ghost">Home</button>
-      </div>
+    <div id="ty-txt" style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:6px;padding:1rem;font-size:.95rem;line-height:1.7;margin-bottom:.75rem"></div>
+    <input id="ty-i" class="inp" type="text" placeholder="ketik di sini..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <div style="color:#444;font-size:.7rem;text-align:center;margin-top:.3rem">ketuk kolom lalu mulai ngetik</div>
+  </div>
+  <div id="ty-end" style="display:none;text-align:center;padding-top:3rem">
+    <div id="ty-ew" style="font-size:2.2rem;font-weight:700"></div>
+    <div style="color:#555;font-size:.8rem">wpm</div>
+    <div id="ty-et" style="color:#555;font-size:.8rem;margin-top:.15rem"></div>
+    <div id="ty-es" style="font-weight:700;margin-top:.25rem"></div>
+    <div style="display:flex;gap:.5rem;justify-content:center;margin-top:1.25rem">
+      <button onclick="go('typing')" class="btn btn-b">main lagi</button>
+      <button onclick="go('home')" class="btn btn-x">home</button>
     </div>
   </div>
 </div>
+</div>
 
 <!-- OVERLAY -->
-<div id="overlay" class="overlay">
-  <div class="card slide-up" style="max-width:22rem; width:100%; padding:2rem; text-align:center;">
-    <div id="ov-title" style="font-size:1.4rem; font-weight:800; margin-bottom:.5rem;"></div>
-    <div id="ov-desc" style="color:var(--muted); font-size:.9rem; margin-bottom:1.25rem;"></div>
-    <div id="ov-cta"></div>
+<div id="ov" class="ov">
+  <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;max-width:320px;width:100%;padding:1.5rem;text-align:center">
+    <div id="ov-t" style="font-size:1.3rem;font-weight:700;margin-bottom:.5rem"></div>
+    <div id="ov-d" style="color:#888;font-size:.85rem;margin-bottom:1.25rem"></div>
+    <div id="ov-c"></div>
   </div>
 </div>
 
 <script>
-// ===== NAVIGATION =====
-function goHome() {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-home').classList.add('active');
-  document.getElementById('overlay').classList.remove('active');
-  rxReset();
-  lgReset();
-  tyReset();
-  renderLB();
+// NAV
+function go(n){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('p-'+n).classList.add('on');
+  document.getElementById('ov').classList.remove('on');
+  if(n==='reaction')rxReset();
+  if(n==='logo')lgStart();
+  if(n==='typing')tyStart();
+  if(n==='home')renderLB();
+}
+function showOv(t,d,c){
+  document.getElementById('ov-t').textContent=t;
+  document.getElementById('ov-d').innerHTML=d;
+  document.getElementById('ov-c').innerHTML=c;
+  document.getElementById('ov').classList.add('on');
+}
+function closeOv(){document.getElementById('ov').classList.remove('on')}
+
+// LB
+function todayK(){return new Date().toISOString().split('T')[0]}
+function getLB(){const d=JSON.parse(localStorage.getItem('hima_lb')||'{}');return d.date===todayK()?d:{date:todayK(),scores:[]}}
+function saveLB(g,s,u){const lb=getLB();lb.scores.push({g,s,u,t:new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})});lb.scores.sort((a,b)=>a.g==='reaction'?a.s-b.s:b.s-a.s);lb.scores=lb.scores.slice(0,10);localStorage.setItem('hima_lb',JSON.stringify(lb));renderLB()}
+function renderLB(){
+  const lb=getLB(),el=document.getElementById('lb');
+  if(!lb.scores.length){el.innerHTML='<span style="color:#555">belum ada</span>';return}
+  const ic={reaction:'&#9889;',logo:'&#128270;',typing:'&#9000;'}
+  el.innerHTML=lb.scores.map((s,i)=>'<div style="display:flex;justify-content:space-between;padding:.3rem 0;'+(i?'border-top:1px solid #222':'')+'"><span style="font-size:.8rem">'+(i+1)+'. '+ic[s.g]+' '+s.s+s.u+'</span><span style="color:#555;font-size:.75rem">'+s.t+'</span></div>').join('');
 }
 
-function openGame(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  document.getElementById('overlay').classList.remove('active');
-  if (name === 'reaction') rxReset();
-  if (name === 'logo') lgStart();
-  if (name === 'typing') tyStart();
-}
-
-function showOv(title, desc, cta) {
-  document.getElementById('ov-title').textContent = title;
-  document.getElementById('ov-desc').innerHTML = desc;
-  document.getElementById('ov-cta').innerHTML = cta;
-  document.getElementById('overlay').classList.add('active');
-}
-
-// ===== LEADERBOARD =====
-function todayKey() { return new Date().toISOString().split('T')[0]; }
-
-function getLB() {
-  const d = JSON.parse(localStorage.getItem('hima_lb') || '{}');
-  return d.date === todayKey() ? d : { date: todayKey(), scores: [] };
-}
-
-function saveLB(game, score, unit) {
-  const lb = getLB();
-  lb.scores.push({ game, score, unit, t: new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}) });
-  lb.scores.sort((a,b) => a.game === 'reaction' ? a.score - b.score : b.score - a.score);
-  lb.scores = lb.scores.slice(0, 10);
-  localStorage.setItem('hima_lb', JSON.stringify(lb));
-  renderLB();
-}
-
-function renderLB() {
-  const lb = getLB();
-  const el = document.getElementById('lb');
-  if (!lb.scores.length) { el.innerHTML = '<div style="color:var(--muted);font-size:.85rem;">Belum ada</div>'; return; }
-  const icon = { reaction:'&#9889;', logo:'&#128270;', typing:'&#9000;' };
-  el.innerHTML = lb.scores.map((s,i) => `<div style="display:flex;justify-content:space-between;align-items:center;padding:.4rem 0;${i?'border-top:1px solid var(--border);':''}"><span style="font-size:.85rem;"><span style="color:var(--muted);width:1.5rem;display:inline-block;">${i+1}.</span>${icon[s.game]} ${s.score}${s.unit}</span><span style="color:var(--muted);font-size:.75rem;">${s.t}</span></div>`).join('');
-}
-
-// ===== REACTION TIME =====
-let rxState = 'idle', rxTimeout = null, rxStart = 0;
-
-function rxReset() {
-  rxState = 'idle';
-  clearTimeout(rxTimeout);
-  const box = document.getElementById('rx-box');
-  box.style.background = 'var(--surface)';
-  document.getElementById('rx-text').textContent = 'Ketuk untuk mulai';
-  document.getElementById('rx-sub').textContent = 'Tunggu warna hijau, ketuk secepat mungkin';
-  document.getElementById('rx-result').style.display = 'none';
-}
-
-document.getElementById('rx-box').addEventListener('click', function() {
-  if (rxState === 'idle') {
-    rxState = 'waiting';
-    this.style.background = '#991b1b';
-    document.getElementById('rx-text').textContent = 'Tunggu...';
-    document.getElementById('rx-sub').textContent = 'Jangan ketuk dulu';
-    rxTimeout = setTimeout(() => {
-      rxState = 'ready';
-      this.style.background = '#065f46';
-      rxStart = Date.now();
-      document.getElementById('rx-text').textContent = 'KETUK!';
-      document.getElementById('rx-sub').textContent = '';
-    }, 1500 + Math.random() * 3000);
-  } else if (rxState === 'waiting') {
-    clearTimeout(rxTimeout);
-    this.style.background = 'var(--surface)';
-    document.getElementById('rx-text').textContent = 'Kepagian!';
-    document.getElementById('rx-sub').textContent = 'Ketuk untuk coba lagi';
-    rxState = 'idle';
-    setTimeout(rxReset, 1200);
-  } else if (rxState === 'ready') {
-    const ms = Date.now() - rxStart;
-    rxState = 'done';
-    this.style.background = 'var(--surface)';
-    document.getElementById('rx-text').textContent = ms + 'ms';
-    document.getElementById('rx-sub').textContent = '';
-    const won = ms < 350;
-    const sc = document.getElementById('rx-score');
-    sc.textContent = ms + 'ms';
-    sc.style.color = won ? 'var(--green)' : 'var(--red)';
-    const st = document.getElementById('rx-status');
-    st.textContent = won ? 'Kamu dapat cap!' : 'Belum di bawah 350ms, coba lagi';
-    st.style.color = won ? 'var(--green)' : 'var(--amber)';
-    document.getElementById('rx-result').style.display = '';
-    saveLB('reaction', ms, 'ms');
-    if (won) showOv('Kamu menang', 'Reaction time <strong>' + ms + 'ms</strong>. Tunjukkan hasil ini ke pengurus untuk ambil cap.', '<button onclick="closeOv()" class="btn btn-green" style="width:100%;">Tutup</button>');
-  }
+// REACTION
+let rxSt='idle',rxTmr=null,rxT0=0;
+function rxReset(){rxSt='idle';clearTimeout(rxTmr);const b=document.getElementById('rx-box');b.style.background='#1a1a1a';document.getElementById('rx-t').textContent='ketuk untuk mulai';document.getElementById('rx-s').textContent='tunggu hijau, ketuk secepat mungkin';document.getElementById('rx-r').style.display='none'}
+document.getElementById('rx-box').addEventListener('click',function(){
+  if(rxSt==='idle'){rxSt='w';this.style.background='#6b1111';document.getElementById('rx-t').textContent='tunggu...';document.getElementById('rx-s').textContent='jangan ketuk dulu';rxTmr=setTimeout(()=>{rxSt='r';this.style.background='#0a3d1f';rxT0=Date.now();document.getElementById('rx-t').textContent='KETUK!';document.getElementById('rx-s').textContent=''},1500+Math.random()*3000)}
+  else if(rxSt==='w'){clearTimeout(rxTmr);this.style.background='#1a1a1a';document.getElementById('rx-t').textContent='kepagian!';document.getElementById('rx-s').textContent='ketuk untuk coba lagi';rxSt='idle';setTimeout(rxReset,1000)}
+  else if(rxSt==='r'){const ms=Date.now()-rxT0;rxSt='d';this.style.background='#1a1a1a';document.getElementById('rx-t').textContent=ms+'ms';document.getElementById('rx-s').textContent='';const w=ms<350;const sc=document.getElementById('rx-sc');sc.textContent=ms+'ms';sc.style.color=w?'#2d6':'#f55';const st=document.getElementById('rx-st');st.textContent=w?'kamu dapat cap':'belum di bawah 350ms';st.style.color=w?'#2d6':'#fa0';document.getElementById('rx-r').style.display='';saveLB('reaction',ms,'ms');if(w)showOv('kamu menang','reaksi <strong>'+ms+'ms</strong>. tunjukkan ini ke pengurus.','<button onclick="closeOv()" class="btn btn-g" style="width:100%">tutup</button>')}
 });
 
-function closeOv() { document.getElementById('overlay').classList.remove('active'); }
-
-// ===== LOGO QUIZ =====
-const lgData = [
-  { text:'Google', c:['#4285f4','#ea4335','#fbbc05','#4285f4','#34a853','#ea4335'], a:['google'] },
-  { text:'Tokopedia', c:['#42b549'], a:['tokopedia','toped'] },
-  { text:'Gojek', c:['#00aa13'], a:['gojek','gojek'] },
-  { text:'Shopee', c:['#ee4d2d'], a:['shopee'] },
-  { text:'Netflix', c:['#e50914'], a:['netflix'] },
-  { text:'Spotify', c:['#1db954'], a:['spotify'] },
-  { text:'Samsung', c:['#1428a0'], a:['samsung'] },
-  { text:'WhatsApp', c:['#25d366'], a:['whatsapp','wa'] },
-  { text:'Grab', c:['#00b14f'], a:['grab'] },
-  { text:'BCA', c:['#003d79'], a:['bca'] },
-  { text:'Dana', c:['#108ee9'], a:['dana'] },
-  { text:'OVO', c:['#4c3494'], a:['ovo'] },
-  { text:'BRI', c:['#003d79'], a:['bri'] },
-  { text:'Apple', c:['#555'], a:['apple','apel'] },
-  { text:'Instagram', c:['#e1306c','#f77737','#fcaf45'], a:['instagram','ig'] },
-  { text:'TikTok', c:['#010101','#ee1d52','#69c9d0'], a:['tiktok'] },
-  { text:'GoPay', c:['#00aa13'], a:['gopay'] },
-  { text:'Microsoft', c:['#f25022','#7fba00','#00a4ef','#ffb900'], a:['microsoft','ms'] },
-  { text:'X', c:['#fff'], a:['x','twitter'] },
-  { text:'Line', c:['#00c300'], a:['line'] },
+// LOGO
+const lgD=[
+  {t:'Google',c:['#4285f4','#ea4335','#fbbc05','#4285f4','#34a853','#ea4335'],a:['google']},
+  {t:'Tokopedia',c:['#42b549'],a:['tokopedia','toped']},
+  {t:'Gojek',c:['#00aa13'],a:['gojek']},
+  {t:'Shopee',c:['#ee4d2d'],a:['shopee']},
+  {t:'Netflix',c:['#e50914'],a:['netflix']},
+  {t:'Spotify',c:['#1db954'],a:['spotify']},
+  {t:'Samsung',c:['#1428a0'],a:['samsung']},
+  {t:'WhatsApp',c:['#25d366'],a:['whatsapp','wa']},
+  {t:'Grab',c:['#00b14f'],a:['grab']},
+  {t:'BCA',c:['#003d79'],a:['bca']},
+  {t:'Dana',c:['#108ee9'],a:['dana']},
+  {t:'OVO',c:['#4c3494'],a:['ovo']},
+  {t:'BRI',c:['#003d79'],a:['bri']},
+  {t:'Apple',c:['#555'],a:['apple','apel']},
+  {t:'Instagram',c:['#e1306c','#f77737','#fcaf45'],a:['instagram','ig']},
+  {t:'TikTok',c:['#010101','#ee1d52','#69c9d0'],a:['tiktok']},
+  {t:'GoPay',c:['#00aa13'],a:['gopay']},
+  {t:'Microsoft',c:['#f25022','#7fba00','#00a4ef','#ffb900'],a:['microsoft']},
+  {t:'X',c:['#fff'],a:['x','twitter']},
+  {t:'Line',c:['#00c300'],a:['line']},
 ];
-let lgQs=[], lgI=0, lgS=0, lgTmr=null;
-
-function lgShuf(a) { for(let i=a.length-1;i>0;i--){const j=Math.random()*i+1|0;[a[i],a[j]]=[a[j],a[i]];} return a; }
-function lgReset() { clearInterval(lgTmr); lgI=0; lgS=0; }
-
-function lgStart() {
-  lgQs = lgShuf([...lgData]).slice(0,10);
-  lgI = 0; lgS = 0;
-  document.getElementById('lg-end').style.display = 'none';
-  document.getElementById('lg-play').style.display = '';
-  lgShow();
+let lgQ=[],lgI=0,lgS=0,lgT=null;
+function lgShf(a){for(let i=a.length-1;i>0;i--){const j=Math.random()*i+1|0;[a[i],a[j]]=[a[j],a[i]]}return a}
+function lgReset(){clearInterval(lgT);lgI=0;lgS=0}
+function lgStart(){lgQ=lgShf([...lgD]).slice(0,10);lgI=0;lgS=0;document.getElementById('lg-end').style.display='none';document.getElementById('lg-play').style.display='';lgShow()}
+function lgShow(){
+  const q=lgQ[lgI];document.getElementById('lg-n').textContent=lgI+1;document.getElementById('lg-sc').textContent=lgS;
+  document.getElementById('lg-fb').style.display='none';document.getElementById('lg-inp').style.display='';
+  const br=document.getElementById('lg-br');
+  if(q.c.length===1){br.style.color=q.c[0];br.textContent=q.t}
+  else{br.innerHTML=q.t.split('').map((ch,i)=>'<span style="color:'+q.c[i%q.c.length]+'">'+ch+'</span>').join('')}
+  br.style.filter='blur(10px)';
+  const inp=document.getElementById('lg-i');inp.value='';inp.focus();
+  clearInterval(lgT);const bar=document.getElementById('lg-bar');bar.style.transition='none';bar.style.width='100%';
+  requestAnimationFrame(()=>{requestAnimationFrame(()=>{bar.style.transition='width 10s linear';bar.style.width='0%'})});
+  lgT=setTimeout(()=>lgFB(false,q.t),10000);
 }
+function lgSub(){const v=document.getElementById('lg-i').value.trim().toLowerCase();if(!v)return;clearTimeout(lgT);const q=lgQ[lgI];const ok=q.a.includes(v);if(ok)lgS++;lgFB(ok,q.t)}
+document.getElementById('lg-i').addEventListener('keydown',e=>{if(e.key==='Enter')lgSub()});
+function lgFB(ok,ans){document.getElementById('lg-br').style.filter='blur(0)';document.getElementById('lg-inp').style.display='none';const el=document.getElementById('lg-ft');el.textContent=ok?'benar':'jawaban: '+ans;el.style.color=ok?'#2d6':'#f55';document.getElementById('lg-sc').textContent=lgS;document.getElementById('lg-fb').style.display=''}
+function lgNext(){lgI++;lgI>=10?lgEnd():lgShow()}
+function lgEnd(){document.getElementById('lg-play').style.display='none';const w=lgS>=7;const sc=document.getElementById('lg-es');sc.textContent=lgS+'/10';sc.style.color=w?'#2d6':'#f55';const st=document.getElementById('lg-est');st.textContent=w?'kamu dapat cap':'belum 7/10';st.style.color=w?'#2d6':'#fa0';document.getElementById('lg-end').style.display='';saveLB('logo',lgS,'/10');if(w)showOv('kamu menang','tebak <strong>'+lgS+'/10</strong> logo. tunjukkan ke pengurus.','<button onclick="closeOv()" class="btn btn-g" style="width:100%">tutup</button>')}
 
-function lgShow() {
-  const q = lgQs[lgI];
-  document.getElementById('lg-num').textContent = lgI + 1;
-  document.getElementById('lg-score').textContent = lgS;
-  document.getElementById('lg-fb').style.display = 'none';
-  document.getElementById('lg-input-area').style.display = '';
-  const br = document.getElementById('lg-brand');
-  if (q.c.length === 1) { br.style.color = q.c[0]; br.textContent = q.text; }
-  else { br.innerHTML = q.text.split('').map((ch,i)=>`<span style="color:${q.c[i%q.c.length]}">${ch}</span>`).join(''); }
-  br.style.filter = 'blur(10px)';
-  const inp = document.getElementById('lg-input');
-  inp.value = '';
-  inp.focus();
-  clearInterval(lgTmr);
-  const bar = document.getElementById('lg-bar');
-  bar.style.transition = 'none'; bar.style.width = '100%';
-  requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ bar.style.transition='width 10s linear'; bar.style.width='0%'; }); });
-  lgTmr = setTimeout(()=> lgFB(false, q.text), 10000);
-}
-
-function lgSubmit() {
-  const v = document.getElementById('lg-input').value.trim().toLowerCase();
-  if (!v) return;
-  clearTimeout(lgTmr);
-  const q = lgQs[lgI];
-  const ok = q.a.includes(v);
-  if (ok) lgS++;
-  lgFB(ok, q.text);
-}
-document.getElementById('lg-input').addEventListener('keydown', e => { if(e.key==='Enter') lgSubmit(); });
-
-function lgFB(ok, ans) {
-  document.getElementById('lg-brand').style.filter = 'blur(0)';
-  document.getElementById('lg-input-area').style.display = 'none';
-  const el = document.getElementById('lg-fb-text');
-  el.textContent = ok ? 'Benar!' : 'Jawaban: ' + ans;
-  el.style.color = ok ? 'var(--green)' : 'var(--red)';
-  document.getElementById('lg-score').textContent = lgS;
-  document.getElementById('lg-fb').style.display = '';
-}
-
-function lgNext() { lgI++; lgI >= 10 ? lgEnd() : lgShow(); }
-
-function lgEnd() {
-  document.getElementById('lg-play').style.display = 'none';
-  const won = lgS >= 7;
-  const sc = document.getElementById('lg-end-score');
-  sc.textContent = lgS + '/10';
-  sc.style.color = won ? 'var(--green)' : 'var(--red)';
-  const st = document.getElementById('lg-end-status');
-  st.textContent = won ? 'Kamu dapat cap!' : 'Belum 7/10, coba lagi';
-  st.style.color = won ? 'var(--green)' : 'var(--amber)';
-  document.getElementById('lg-end').style.display = '';
-  saveLB('logo', lgS, '/10');
-  if (won) showOv('Kamu menang', 'Tebak <strong>'+lgS+'/10</strong> logo. Tunjukkan ke pengurus untuk ambil cap.', '<button onclick="closeOv()" class="btn btn-green" style="width:100%;">Tutup</button>');
-}
-
-// ===== TYPING =====
-const tySentences = [
+// TYPING
+const tyS=[
   "HIMA TI adalah keluarga besar mahasiswa Teknologi Informasi",
   "Teknologi Informasi jurusan terbaik di kampus kita",
   "Selamat datang mahasiswa baru angkatan dua ribu dua puluh enam",
@@ -431,66 +246,24 @@ const tySentences = [
   "Dari mahasiswa untuk mahasiswa itulah semangat HIMA TI",
   "Kode program adalah bahasa masa depan generasi muda",
 ];
-let tySentence='', tyStart=null, tyActive=false, tyInterval=null;
-
-function tyReset() { tyActive=false; clearInterval(tyInterval); }
-
-function tyStart() {
-  tySentence = tySentences[Math.random()*tySentences.length|0];
-  tyStart = null; tyActive = true;
-  clearInterval(tyInterval);
-  document.getElementById('ty-end').style.display = 'none';
-  document.getElementById('ty-play').style.display = '';
-  document.getElementById('ty-text').innerHTML = tySentence.split('').map((c,i)=>`<span id="c${i}" style="color:var(--muted)">${c===' '?'&nbsp;':c}</span>`).join('');
-  const inp = document.getElementById('ty-input');
-  inp.value = ''; inp.focus();
-  document.getElementById('ty-wpm').textContent = '0';
-  document.getElementById('ty-time').textContent = '0.0';
+let tySn='',tyT0=null,tyOn=false,tyIv=null;
+function tyReset(){tyOn=false;clearInterval(tyIv)}
+function tyStart(){
+  tySn=tyS[Math.random()*tyS.length|0];tyT0=null;tyOn=true;clearInterval(tyIv);
+  document.getElementById('ty-end').style.display='none';document.getElementById('ty-play').style.display='';
+  document.getElementById('ty-txt').innerHTML=tySn.split('').map((c,i)=>'<span id="tc'+i+'" style="color:#555">'+(c===' '?'&nbsp;':c)+'</span>').join('');
+  const inp=document.getElementById('ty-i');inp.value='';inp.focus();
+  document.getElementById('ty-w').textContent='0';document.getElementById('ty-t').textContent='0.0';
 }
-
-document.getElementById('ty-input').addEventListener('input', function() {
-  if (!tyActive) return;
-  if (!tyStart) {
-    tyStart = Date.now();
-    tyInterval = setInterval(()=>{
-      const s = (Date.now()-tyStart)/1000;
-      const w = this.value.split(' ').filter(x=>x).length;
-      document.getElementById('ty-wpm').textContent = s>0 ? Math.round(w/s*60) : 0;
-      document.getElementById('ty-time').textContent = s.toFixed(1);
-    }, 100);
-  }
-  const t = this.value;
-  for (let i=0;i<tySentence.length;i++) {
-    const ch = document.getElementById('c'+i);
-    if (i<t.length) ch.style.color = t[i]===tySentence[i] ? 'var(--green)' : 'var(--red)';
-    else if (i===t.length) { ch.style.color='#fff'; ch.style.background='var(--border)'; ch.style.borderRadius='2px'; }
-    else { ch.style.color='var(--muted)'; ch.style.background=''; }
-  }
-  if (t.length >= tySentence.length) {
-    tyActive = false; clearInterval(tyInterval);
-    let ok=0; for(let i=0;i<tySentence.length;i++) if(t[i]===tySentence[i]) ok++;
-    const acc = ok/tySentence.length;
-    const s = (Date.now()-tyStart)/1000;
-    const wpm = Math.round(tySentence.split(' ').length/s*60*acc);
-    tyEnd(wpm, s);
-  }
+document.getElementById('ty-i').addEventListener('input',function(){
+  if(!tyOn)return;
+  if(!tyT0){tyT0=Date.now();tyIv=setInterval(()=>{const s=(Date.now()-tyT0)/1000;const w=this.value.split(' ').filter(x=>x).length;document.getElementById('ty-w').textContent=s>0?Math.round(w/s*60):0;document.getElementById('ty-t').textContent=s.toFixed(1)},100)}
+  const t=this.value;
+  for(let i=0;i<tySn.length;i++){const ch=document.getElementById('tc'+i);if(i<t.length)ch.style.color=t[i]===tySn[i]?'#2d6':'#f55';else if(i===t.length){ch.style.color='#fff';ch.style.background='#333';ch.style.borderRadius='2px'}else{ch.style.color='#555';ch.style.background=''}}
+  if(t.length>=tySn.length){tyOn=false;clearInterval(tyIv);let ok=0;for(let i=0;i<tySn.length;i++)if(t[i]===tySn[i])ok++;const s=(Date.now()-tyT0)/1000;const wpm=Math.round(tySn.split(' ').length/s*60*(ok/tySn.length));tyEnd(wpm,s)}
 });
+function tyEnd(wpm,s){document.getElementById('ty-play').style.display='none';const w=wpm>30;const sc=document.getElementById('ty-ew');sc.textContent=wpm;sc.style.color=w?'#2d6':'#f55';document.getElementById('ty-et').textContent=s.toFixed(1)+' detik';const st=document.getElementById('ty-es');st.textContent=w?'kamu dapat cap':'belum di atas 30 wpm';st.style.color=w?'#2d6':'#fa0';document.getElementById('ty-end').style.display='';saveLB('typing',wpm,' wpm');if(w)showOv('kamu menang','ketik <strong>'+wpm+' wpm</strong>. tunjukkan ke pengurus.','<button onclick="closeOv()" class="btn btn-g" style="width:100%">tutup</button>')}
 
-function tyEnd(wpm, s) {
-  document.getElementById('ty-play').style.display = 'none';
-  const won = wpm > 30;
-  const sc = document.getElementById('ty-end-wpm');
-  sc.textContent = wpm; sc.style.color = won ? 'var(--green)' : 'var(--red)';
-  document.getElementById('ty-end-time').textContent = s.toFixed(1) + ' detik';
-  const st = document.getElementById('ty-end-status');
-  st.textContent = won ? 'Kamu dapat cap!' : 'Belum di atas 30 WPM, coba lagi';
-  st.style.color = won ? 'var(--green)' : 'var(--amber)';
-  document.getElementById('ty-end').style.display = '';
-  saveLB('typing', wpm, ' WPM');
-  if (won) showOv('Kamu menang', 'Typing speed <strong>'+wpm+' WPM</strong>. Tunjukkan ke pengurus untuk ambil cap.', '<button onclick="closeOv()" class="btn btn-green" style="width:100%;">Tutup</button>');
-}
-
-// ===== INIT =====
 renderLB();
 </script>
 </body>
