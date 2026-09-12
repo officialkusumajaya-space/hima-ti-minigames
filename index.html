@@ -18,52 +18,69 @@ input{font-family:inherit}
 .item:hover{background:#222}
 .item b{display:block;font-size:1rem;margin-bottom:.15rem}
 .item small{color:#777}
-.btn{display:inline-block;padding:.7rem 1.4rem;border:none;border-radius:5px;font-weight:700;font-size:.9rem}
+.btn{display:inline-block;padding:.7rem 1.4rem;border:none;border-radius:5px;font-weight:700;font-size:.9rem;cursor:pointer}
 .btn-g{background:#2d6;color:#000}
 .btn-b{background:#39f;color:#000}
 .btn-x{background:#222;color:#888;border:1px solid #333}
 h1{font-size:1.3rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase}
 .inp{width:100%;background:#111;border:1px solid #333;padding:.75rem 1rem;font-size:1rem;color:#ddd;border-radius:4px;outline:none}
 .inp:focus{border-color:#39f}
-.tag{display:inline-block;background:#1a2a1a;border:1px solid #2a3a2a;color:#6a6;padding:.15rem .5rem;border-radius:3px;font-size:.75rem}
+.lb-row{display:flex;justify-content:space-between;align-items:center;padding:.35rem 0;font-size:.8rem}
+.lb-row+.lb-row{border-top:1px solid #222}
+.lb-name{color:#aaa;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-score{font-weight:700;color:#ddd}
+.lb-time{color:#555;font-size:.7rem}
+.logo-img{width:80px;height:80px;object-fit:contain;transition:filter .4s;image-rendering:auto}
 </style>
 </head>
 <body>
 
+<!-- NAME MODAL -->
+<div id="name-ov" class="ov on">
+  <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;max-width:320px;width:100%;padding:1.5rem;text-align:center">
+    <h1 style="margin-bottom:.25rem;font-size:1.1rem">HIMA TI</h1>
+    <div style="color:#555;font-size:.75rem;margin-bottom:1.25rem">ospek 2026</div>
+    <div style="text-align:left;margin-bottom:.75rem;font-size:.8rem;color:#888">masukin nama dulu</div>
+    <input id="name-inp" class="inp" type="text" placeholder="nama kamu" autocomplete="off" autofocus>
+    <button onclick="setName()" class="btn btn-g" style="width:100%;margin-top:.5rem">mulai</button>
+  </div>
+</div>
+
 <!-- HOME -->
-<div id="p-home" class="page on">
+<div id="p-home" class="page">
 <div class="wrap">
-  <div style="text-align:center;margin-bottom:2rem;padding-top:2rem">
+  <div style="text-align:center;margin-bottom:1.5rem;padding-top:1rem">
     <h1>HIMA TI</h1>
-    <div style="color:#555;font-size:.8rem;margin-top:.3rem">stand ospek &mdash; main &amp; menang</div>
+    <div style="color:#555;font-size:.75rem;margin-top:.2rem">stand ospek &mdash; main &amp; menang</div>
+    <div style="color:#444;font-size:.7rem;margin-top:.4rem">halo, <span id="disp-name"></span></div>
   </div>
 
-  <a class="item" onclick="go('reaction')">
+  <a class="item" onclick="openGame('reaction')">
     <b>Reaction Time</b>
     <small>ketuk saat layar hijau &bull; menang &lt; 350ms</small>
   </a>
-  <a class="item" onclick="go('logo')">
+  <a class="item" onclick="openGame('logo')">
     <b>Tebak Logo</b>
-    <small>tebak brand dari teks blur &bull; menang &ge; 7/10</small>
+    <small>tebak brand dari logo blur &bull; menang &ge; 7/10</small>
   </a>
-  <a class="item" onclick="go('typing')">
+  <a class="item" onclick="openGame('typing')">
     <b>Typing Race</b>
     <small>ketik kalimat secepat mungkin &bull; menang &gt; 30 WPM</small>
   </a>
 
-  <div style="margin-top:2rem;border-top:1px solid #222;padding-top:1rem">
-    <div style="font-size:.7rem;color:#555;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem">skor hari ini</div>
+  <div style="margin-top:1.5rem;border-top:1px solid #222;padding-top:1rem">
+    <div style="font-size:.7rem;color:#555;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem">leaderboard</div>
     <div id="lb" style="color:#555;font-size:.8rem">belum ada</div>
   </div>
 
-  <div style="text-align:center;margin-top:2rem;color:#333;font-size:.7rem">HIMA TI &bull; 2026</div>
+  <div style="text-align:center;margin-top:1.5rem;color:#333;font-size:.65rem">HIMA TI &bull; 2026</div>
 </div>
 </div>
 
 <!-- REACTION -->
 <div id="p-reaction" class="page">
 <div class="wrap">
-  <a onclick="go('home')" style="color:#555;font-size:.8rem;display:block;margin-bottom:1rem">&larr; kembali</a>
+  <a onclick="goHome()" style="color:#555;font-size:.8rem;display:block;margin-bottom:1rem">&larr; kembali</a>
   <div id="rx-box" style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer;-webkit-user-select:none;user-select:none">
     <div id="rx-t" style="font-size:1.2rem;font-weight:700">ketuk untuk mulai</div>
     <div id="rx-s" style="color:#555;font-size:.8rem;margin-top:.4rem">tunggu hijau, ketuk secepat mungkin</div>
@@ -73,7 +90,7 @@ h1{font-size:1.3rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase
     <div id="rx-st" style="font-weight:700;margin-top:.25rem"></div>
     <div style="display:flex;gap:.5rem;justify-content:center;margin-top:1rem">
       <button onclick="rxReset()" class="btn btn-b">main lagi</button>
-      <button onclick="go('home')" class="btn btn-x">home</button>
+      <button onclick="goHome()" class="btn btn-x">home</button>
     </div>
   </div>
 </div>
@@ -82,14 +99,14 @@ h1{font-size:1.3rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase
 <!-- LOGO -->
 <div id="p-logo" class="page">
 <div class="wrap">
-  <a onclick="go('home')" style="color:#555;font-size:.8rem;display:block;margin-bottom:1rem">&larr; kembali</a>
+  <a onclick="goHome()" style="color:#555;font-size:.8rem;display:block;margin-bottom:1rem">&larr; kembali</a>
   <div id="lg-play">
     <div style="display:flex;justify-content:space-between;margin-bottom:.75rem">
       <span style="color:#555;font-size:.8rem">soal <span id="lg-n">1</span>/10</span>
       <span style="color:#555;font-size:.8rem">skor: <span id="lg-sc">0</span></span>
     </div>
-    <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:2rem;text-align:center;min-height:120px;display:flex;align-items:center;justify-content:center;margin-bottom:.75rem">
-      <div id="lg-br" style="font-size:2rem;font-weight:900;text-transform:uppercase;transition:filter .4s"></div>
+    <div style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:8px;padding:1.5rem;text-align:center;min-height:130px;display:flex;align-items:center;justify-content:center;margin-bottom:.75rem">
+      <img id="lg-img" class="logo-img" src="" alt="">
     </div>
     <div style="width:100%;background:#222;height:2px;border-radius:1px;margin-bottom:.75rem">
       <div id="lg-bar" style="height:100%;background:#2d6;border-radius:1px;width:100%"></div>
@@ -107,8 +124,8 @@ h1{font-size:1.3rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase
     <div id="lg-es" style="font-size:2.2rem;font-weight:700"></div>
     <div id="lg-est" style="font-weight:700;margin-top:.25rem"></div>
     <div style="display:flex;gap:.5rem;justify-content:center;margin-top:1.25rem">
-      <button onclick="go('logo')" class="btn btn-g">main lagi</button>
-      <button onclick="go('home')" class="btn btn-x">home</button>
+      <button onclick="openGame('logo')" class="btn btn-g">main lagi</button>
+      <button onclick="goHome()" class="btn btn-x">home</button>
     </div>
   </div>
 </div>
@@ -117,13 +134,13 @@ h1{font-size:1.3rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase
 <!-- TYPING -->
 <div id="p-typing" class="page">
 <div class="wrap">
-  <a onclick="go('home')" style="color:#555;font-size:.8rem;display:block;margin-bottom:1rem">&larr; kembali</a>
+  <a onclick="goHome()" style="color:#555;font-size:.8rem;display:block;margin-bottom:1rem">&larr; kembali</a>
   <div id="ty-play">
     <div style="display:flex;justify-content:space-between;margin-bottom:.75rem">
       <span style="color:#555;font-size:.8rem">wpm: <span id="ty-w">0</span></span>
       <span style="color:#555;font-size:.8rem">waktu: <span id="ty-t">0.0</span>s</span>
     </div>
-    <div id="ty-txt" style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:6px;padding:1rem;font-size:.95rem;line-height:1.7;margin-bottom:.75rem"></div>
+    <div id="ty-txt" style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:6px;padding:1rem;font-size:.95rem;line-height:1.7;margin-bottom:.75rem;overflow-wrap:break-word;word-break:break-word"></div>
     <input id="ty-i" class="inp" type="text" placeholder="ketik di sini..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     <div style="color:#444;font-size:.7rem;text-align:center;margin-top:.3rem">ketuk kolom lalu mulai ngetik</div>
   </div>
@@ -133,8 +150,8 @@ h1{font-size:1.3rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase
     <div id="ty-et" style="color:#555;font-size:.8rem;margin-top:.15rem"></div>
     <div id="ty-es" style="font-weight:700;margin-top:.25rem"></div>
     <div style="display:flex;gap:.5rem;justify-content:center;margin-top:1.25rem">
-      <button onclick="go('typing')" class="btn btn-b">main lagi</button>
-      <button onclick="go('home')" class="btn btn-x">home</button>
+      <button onclick="openGame('typing')" class="btn btn-b">main lagi</button>
+      <button onclick="goHome()" class="btn btn-x">home</button>
     </div>
   </div>
 </div>
@@ -150,91 +167,280 @@ h1{font-size:1.3rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase
 </div>
 
 <script>
-// NAV
-function go(n){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
-  document.getElementById('p-'+n).classList.add('on');
-  document.getElementById('ov').classList.remove('on');
-  if(n==='reaction')rxReset();
-  if(n==='logo')lgStart();
-  if(n==='typing')tyStart();
-  if(n==='home')renderLB();
+// ===== LOGO DATA (Google Favicons API) =====
+const LOGOS=[
+  {n:"Google",u:"https://www.google.com/s2/favicons?domain=google.com&sz=128"},
+  {n:"Tokopedia",u:"https://www.google.com/s2/favicons?domain=tokopedia.com&sz=128"},
+  {n:"Shopee",u:"https://www.google.com/s2/favicons?domain=shopee.co.id&sz=128"},
+  {n:"Netflix",u:"https://www.google.com/s2/favicons?domain=netflix.com&sz=128"},
+  {n:"Spotify",u:"https://www.google.com/s2/favicons?domain=spotify.com&sz=128"},
+  {n:"Samsung",u:"https://www.google.com/s2/favicons?domain=samsung.com&sz=128"},
+  {n:"WhatsApp",u:"https://www.google.com/s2/favicons?domain=whatsapp.com&sz=128"},
+  {n:"Grab",u:"https://www.google.com/s2/favicons?domain=grab.com&sz=128"},
+  {n:"BCA",u:"https://www.google.com/s2/favicons?domain=bca.co.id&sz=128"},
+  {n:"Dana",u:"https://www.google.com/s2/favicons?domain=dana.id&sz=128"},
+  {n:"BRI",u:"https://www.google.com/s2/favicons?domain=bri.co.id&sz=128"},
+  {n:"Apple",u:"https://www.google.com/s2/favicons?domain=apple.com&sz=128"},
+  {n:"Instagram",u:"https://www.google.com/s2/favicons?domain=instagram.com&sz=128"},
+  {n:"TikTok",u:"https://www.google.com/s2/favicons?domain=tiktok.com&sz=128"},
+  {n:"Microsoft",u:"https://www.google.com/s2/favicons?domain=microsoft.com&sz=128"},
+  {n:"X",u:"https://www.google.com/s2/favicons?domain=x.com&sz=128"},
+  {n:"LINE",u:"https://www.google.com/s2/favicons?domain=line.me&sz=128"},
+  {n:"Bukalapak",u:"https://www.google.com/s2/favicons?domain=bukalapak.com&sz=128"},
+  {n:"Traveloka",u:"https://www.google.com/s2/favicons?domain=traveloka.com&sz=128"},
+  {n:"PayPal",u:"https://www.google.com/s2/favicons?domain=paypal.com&sz=128"},
+  {n:"YouTube",u:"https://www.google.com/s2/favicons?domain=youtube.com&sz=128"},
+  {n:"Discord",u:"https://www.google.com/s2/favicons?domain=discord.com&sz=128"},
+  {n:"Chrome",u:"https://www.google.com/s2/favicons?domain=google.com/chrome&sz=128"},
+  {n:"Firefox",u:"https://www.google.com/s2/favicons?domain=mozilla.org&sz=128"},
+  {n:"Twitch",u:"https://www.google.com/s2/favicons?domain=twitch.tv&sz=128"},
+  {n:"Reddit",u:"https://www.google.com/s2/favicons?domain=reddit.com&sz=128"},
+  {n:"LinkedIn",u:"https://www.google.com/s2/favicons?domain=linkedin.com&sz=128"},
+  {n:"GitHub",u:"https://www.google.com/s2/favicons?domain=github.com&sz=128"},
+  {n:"Amazon",u:"https://www.google.com/s2/favicons?domain=amazon.com&sz=128"},
+  {n:"Zoom",u:"https://www.google.com/s2/favicons?domain=zoom.us&sz=128"},
+  {n:"Mandiri",u:"https://www.google.com/s2/favicons?domain=bankmandiri.co.id&sz=128"},
+  {n:"GoFood",u:"https://www.google.com/s2/favicons?domain=gofood.co.id&sz=128"},
+  {n:"McDonald's",u:"https://www.google.com/s2/favicons?domain=mcdonalds.com&sz=128"},
+  {n:"Starbucks",u:"https://www.google.com/s2/favicons?domain=starbucks.com&sz=128"},
+  {n:"Nike",u:"https://www.google.com/s2/favicons?domain=nike.com&sz=128"},
+  {n:"Adidas",u:"https://www.google.com/s2/favicons?domain=adidas.com&sz=128"},
+  {n:"PUBG",u:"https://www.google.com/s2/favicons?domain=pubg.com&sz=128"},
+  {n:"Mobile Legends",u:"https://www.google.com/s2/favicons?domain=mobile-legends.com&sz=128"},
+  {n:"Genshin Impact",u:"https://www.google.com/s2/favicons?domain=genshin.hoyoverse.com&sz=128"},
+  {n:"Blibli",u:"https://www.google.com/s2/favicons?domain=blibli.com&sz=128"},
+  {n:"DJP",u:"https://www.google.com/s2/favicons?domain=pajak.go.id&sz=128"},
+];
+
+// ===== NAME SYSTEM =====
+let playerName = localStorage.getItem('hima_name') || '';
+if (playerName) {
+  document.getElementById('name-ov').classList.remove('on');
+  document.getElementById('disp-name').textContent = playerName;
+} else {
+  document.getElementById('name-inp').focus();
 }
-function showOv(t,d,c){
-  document.getElementById('ov-t').textContent=t;
-  document.getElementById('ov-d').innerHTML=d;
-  document.getElementById('ov-c').innerHTML=c;
+
+function setName() {
+  const v = document.getElementById('name-inp').value.trim();
+  if (!v) return;
+  playerName = v;
+  localStorage.setItem('hima_name', v);
+  document.getElementById('name-ov').classList.remove('on');
+  document.getElementById('disp-name').textContent = v;
+  renderLB();
+}
+document.getElementById('name-inp').addEventListener('keydown', e => { if(e.key==='Enter') setName(); });
+
+// ===== NAV =====
+function goHome() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.getElementById('p-home').classList.add('on');
+  document.getElementById('ov').classList.remove('on');
+  rxReset(); lgReset(); tyReset();
+  renderLB();
+}
+
+function openGame(n) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.getElementById('p-' + n).classList.add('on');
+  document.getElementById('ov').classList.remove('on');
+  if (n === 'reaction') rxReset();
+  if (n === 'logo') lgStart();
+  if (n === 'typing') tyStart();
+}
+
+function showOv(t, d, c) {
+  document.getElementById('ov-t').textContent = t;
+  document.getElementById('ov-d').innerHTML = d;
+  document.getElementById('ov-c').innerHTML = c;
   document.getElementById('ov').classList.add('on');
 }
-function closeOv(){document.getElementById('ov').classList.remove('on')}
+function closeOv() { document.getElementById('ov').classList.remove('on'); }
 
-// LB
-function todayK(){return new Date().toISOString().split('T')[0]}
-function getLB(){const d=JSON.parse(localStorage.getItem('hima_lb')||'{}');return d.date===todayK()?d:{date:todayK(),scores:[]}}
-function saveLB(g,s,u){const lb=getLB();lb.scores.push({g,s,u,t:new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})});lb.scores.sort((a,b)=>a.g==='reaction'?a.s-b.s:b.s-a.s);lb.scores=lb.scores.slice(0,10);localStorage.setItem('hima_lb',JSON.stringify(lb));renderLB()}
-function renderLB(){
-  const lb=getLB(),el=document.getElementById('lb');
-  if(!lb.scores.length){el.innerHTML='<span style="color:#555">belum ada</span>';return}
-  const ic={reaction:'&#9889;',logo:'&#128270;',typing:'&#9000;'}
-  el.innerHTML=lb.scores.map((s,i)=>'<div style="display:flex;justify-content:space-between;padding:.3rem 0;'+(i?'border-top:1px solid #222':'')+'"><span style="font-size:.8rem">'+(i+1)+'. '+ic[s.g]+' '+s.s+s.u+'</span><span style="color:#555;font-size:.75rem">'+s.t+'</span></div>').join('');
+// ===== LEADERBOARD =====
+function todayK() { return new Date().toISOString().split('T')[0]; }
+
+function getLB() {
+  const d = JSON.parse(localStorage.getItem('hima_lb') || '{}');
+  return d.date === todayK() ? d : { date: todayK(), scores: [] };
 }
 
-// REACTION
-let rxSt='idle',rxTmr=null,rxT0=0;
-function rxReset(){rxSt='idle';clearTimeout(rxTmr);const b=document.getElementById('rx-box');b.style.background='#1a1a1a';document.getElementById('rx-t').textContent='ketuk untuk mulai';document.getElementById('rx-s').textContent='tunggu hijau, ketuk secepat mungkin';document.getElementById('rx-r').style.display='none'}
-document.getElementById('rx-box').addEventListener('click',function(){
-  if(rxSt==='idle'){rxSt='w';this.style.background='#6b1111';document.getElementById('rx-t').textContent='tunggu...';document.getElementById('rx-s').textContent='jangan ketuk dulu';rxTmr=setTimeout(()=>{rxSt='r';this.style.background='#0a3d1f';rxT0=Date.now();document.getElementById('rx-t').textContent='KETUK!';document.getElementById('rx-s').textContent=''},1500+Math.random()*3000)}
-  else if(rxSt==='w'){clearTimeout(rxTmr);this.style.background='#1a1a1a';document.getElementById('rx-t').textContent='kepagian!';document.getElementById('rx-s').textContent='ketuk untuk coba lagi';rxSt='idle';setTimeout(rxReset,1000)}
-  else if(rxSt==='r'){const ms=Date.now()-rxT0;rxSt='d';this.style.background='#1a1a1a';document.getElementById('rx-t').textContent=ms+'ms';document.getElementById('rx-s').textContent='';const w=ms<350;const sc=document.getElementById('rx-sc');sc.textContent=ms+'ms';sc.style.color=w?'#2d6':'#f55';const st=document.getElementById('rx-st');st.textContent=w?'kamu dapat cap':'belum di bawah 350ms';st.style.color=w?'#2d6':'#fa0';document.getElementById('rx-r').style.display='';saveLB('reaction',ms,'ms');if(w)showOv('kamu menang','reaksi <strong>'+ms+'ms</strong>. tunjukkan ini ke pengurus.','<button onclick="closeOv()" class="btn btn-g" style="width:100%">tutup</button>')}
+function saveLB(game, score, unit) {
+  const lb = getLB();
+  lb.scores.push({
+    g: game, s: score, u: unit,
+    name: playerName || 'anon',
+    t: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+  });
+  lb.scores.sort((a, b) => a.g === 'reaction' ? a.s - b.s : b.s - a.s);
+  lb.scores = lb.scores.slice(0, 15);
+  localStorage.setItem('hima_lb', JSON.stringify(lb));
+  renderLB();
+}
+
+function renderLB() {
+  const lb = getLB();
+  const el = document.getElementById('lb');
+  if (!lb.scores.length) {
+    el.innerHTML = '<span style="color:#555">belum ada</span>';
+    return;
+  }
+  const ic = { reaction: '&#9889;', logo: '&#128270;', typing: '&#9000;' };
+  el.innerHTML = lb.scores.map((s, i) =>
+    '<div class="lb-row">' +
+      '<span style="color:#555;font-size:.7rem;width:1.2rem">' + (i + 1) + '.</span>' +
+      '<span class="lb-name">' + (s.name || 'anon') + '</span>' +
+      '<span class="lb-score">' + s.s + s.u + '</span>' +
+      '<span class="lb-time">' + (s.t || '') + '</span>' +
+    '</div>'
+  ).join('');
+}
+
+// ===== REACTION TIME =====
+let rxSt = 'idle', rxTmr = null, rxT0 = 0;
+
+function rxReset() {
+  rxSt = 'idle';
+  clearTimeout(rxTmr);
+  const b = document.getElementById('rx-box');
+  b.style.background = '#1a1a1a';
+  document.getElementById('rx-t').textContent = 'ketuk untuk mulai';
+  document.getElementById('rx-s').textContent = 'tunggu hijau, ketuk secepat mungkin';
+  document.getElementById('rx-r').style.display = 'none';
+}
+
+document.getElementById('rx-box').addEventListener('click', function() {
+  if (rxSt === 'idle') {
+    rxSt = 'w';
+    this.style.background = '#6b1111';
+    document.getElementById('rx-t').textContent = 'tunggu...';
+    document.getElementById('rx-s').textContent = 'jangan ketuk dulu';
+    rxTmr = setTimeout(() => {
+      rxSt = 'r';
+      this.style.background = '#0a3d1f';
+      rxT0 = Date.now();
+      document.getElementById('rx-t').textContent = 'KETUK!';
+      document.getElementById('rx-s').textContent = '';
+    }, 1500 + Math.random() * 3000);
+  } else if (rxSt === 'w') {
+    clearTimeout(rxTmr);
+    this.style.background = '#1a1a1a';
+    document.getElementById('rx-t').textContent = 'kepagian!';
+    document.getElementById('rx-s').textContent = 'ketuk untuk coba lagi';
+    rxSt = 'idle';
+    setTimeout(rxReset, 1000);
+  } else if (rxSt === 'r') {
+    const ms = Date.now() - rxT0;
+    rxSt = 'd';
+    this.style.background = '#1a1a1a';
+    document.getElementById('rx-t').textContent = ms + 'ms';
+    document.getElementById('rx-s').textContent = '';
+    const w = ms < 350;
+    const sc = document.getElementById('rx-sc');
+    sc.textContent = ms + 'ms';
+    sc.style.color = w ? '#2d6' : '#f55';
+    const st = document.getElementById('rx-st');
+    st.textContent = w ? 'kamu dapat cap' : 'belum di bawah 350ms';
+    st.style.color = w ? '#2d6' : '#fa0';
+    document.getElementById('rx-r').style.display = '';
+    saveLB('reaction', ms, 'ms');
+    if (w) showOv('kamu menang', 'reaksi <strong>' + ms + 'ms</strong>. tunjukkan ini ke pengurus.', '<button onclick="closeOv()" class="btn btn-g" style="width:100%">tutup</button>');
+  }
 });
 
-// LOGO
-const lgD=[
-  {t:'Google',c:['#4285f4','#ea4335','#fbbc05','#4285f4','#34a853','#ea4335'],a:['google']},
-  {t:'Tokopedia',c:['#42b549'],a:['tokopedia','toped']},
-  {t:'Gojek',c:['#00aa13'],a:['gojek']},
-  {t:'Shopee',c:['#ee4d2d'],a:['shopee']},
-  {t:'Netflix',c:['#e50914'],a:['netflix']},
-  {t:'Spotify',c:['#1db954'],a:['spotify']},
-  {t:'Samsung',c:['#1428a0'],a:['samsung']},
-  {t:'WhatsApp',c:['#25d366'],a:['whatsapp','wa']},
-  {t:'Grab',c:['#00b14f'],a:['grab']},
-  {t:'BCA',c:['#003d79'],a:['bca']},
-  {t:'Dana',c:['#108ee9'],a:['dana']},
-  {t:'OVO',c:['#4c3494'],a:['ovo']},
-  {t:'BRI',c:['#003d79'],a:['bri']},
-  {t:'Apple',c:['#555'],a:['apple','apel']},
-  {t:'Instagram',c:['#e1306c','#f77737','#fcaf45'],a:['instagram','ig']},
-  {t:'TikTok',c:['#010101','#ee1d52','#69c9d0'],a:['tiktok']},
-  {t:'GoPay',c:['#00aa13'],a:['gopay']},
-  {t:'Microsoft',c:['#f25022','#7fba00','#00a4ef','#ffb900'],a:['microsoft']},
-  {t:'X',c:['#fff'],a:['x','twitter']},
-  {t:'Line',c:['#00c300'],a:['line']},
-];
-let lgQ=[],lgI=0,lgS=0,lgT=null;
-function lgShf(a){for(let i=a.length-1;i>0;i--){const j=Math.random()*i+1|0;[a[i],a[j]]=[a[j],a[i]]}return a}
-function lgReset(){clearInterval(lgT);lgI=0;lgS=0}
-function lgStart(){lgQ=lgShf([...lgD]).slice(0,10);lgI=0;lgS=0;document.getElementById('lg-end').style.display='none';document.getElementById('lg-play').style.display='';lgShow()}
-function lgShow(){
-  const q=lgQ[lgI];document.getElementById('lg-n').textContent=lgI+1;document.getElementById('lg-sc').textContent=lgS;
-  document.getElementById('lg-fb').style.display='none';document.getElementById('lg-inp').style.display='';
-  const br=document.getElementById('lg-br');
-  if(q.c.length===1){br.style.color=q.c[0];br.textContent=q.t}
-  else{br.innerHTML=q.t.split('').map((ch,i)=>'<span style="color:'+q.c[i%q.c.length]+'">'+ch+'</span>').join('')}
-  br.style.filter='blur(10px)';
-  const inp=document.getElementById('lg-i');inp.value='';inp.focus();
-  clearInterval(lgT);const bar=document.getElementById('lg-bar');bar.style.transition='none';bar.style.width='100%';
-  requestAnimationFrame(()=>{requestAnimationFrame(()=>{bar.style.transition='width 10s linear';bar.style.width='0%'})});
-  lgT=setTimeout(()=>lgFB(false,q.t),10000);
-}
-function lgSub(){const v=document.getElementById('lg-i').value.trim().toLowerCase();if(!v)return;clearTimeout(lgT);const q=lgQ[lgI];const ok=q.a.includes(v);if(ok)lgS++;lgFB(ok,q.t)}
-document.getElementById('lg-i').addEventListener('keydown',e=>{if(e.key==='Enter')lgSub()});
-function lgFB(ok,ans){document.getElementById('lg-br').style.filter='blur(0)';document.getElementById('lg-inp').style.display='none';const el=document.getElementById('lg-ft');el.textContent=ok?'benar':'jawaban: '+ans;el.style.color=ok?'#2d6':'#f55';document.getElementById('lg-sc').textContent=lgS;document.getElementById('lg-fb').style.display=''}
-function lgNext(){lgI++;lgI>=10?lgEnd():lgShow()}
-function lgEnd(){document.getElementById('lg-play').style.display='none';const w=lgS>=7;const sc=document.getElementById('lg-es');sc.textContent=lgS+'/10';sc.style.color=w?'#2d6':'#f55';const st=document.getElementById('lg-est');st.textContent=w?'kamu dapat cap':'belum 7/10';st.style.color=w?'#2d6':'#fa0';document.getElementById('lg-end').style.display='';saveLB('logo',lgS,'/10');if(w)showOv('kamu menang','tebak <strong>'+lgS+'/10</strong> logo. tunjukkan ke pengurus.','<button onclick="closeOv()" class="btn btn-g" style="width:100%">tutup</button>')}
+// ===== LOGO QUIZ =====
+let lgQ = [], lgI = 0, lgS = 0, lgTmr = null;
 
-// TYPING
-const tyS=[
+function lgShf(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.random() * (i + 1) | 0;
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function lgReset() { clearInterval(lgTmr); lgI = 0; lgS = 0; }
+
+function lgStart() {
+  lgQ = lgShf([...LOGOS]).slice(0, 10);
+  lgI = 0; lgS = 0;
+  document.getElementById('lg-end').style.display = 'none';
+  document.getElementById('lg-play').style.display = '';
+  lgShow();
+}
+
+function lgShow() {
+  const q = lgQ[lgI];
+  document.getElementById('lg-n').textContent = lgI + 1;
+  document.getElementById('lg-sc').textContent = lgS;
+  document.getElementById('lg-fb').style.display = 'none';
+  document.getElementById('lg-inp').style.display = '';
+
+  const img = document.getElementById('lg-img');
+  // FIX: hide image FIRST, set blur, load, then show
+  img.style.visibility = 'hidden';
+  img.style.filter = 'blur(12px)';
+  img.onload = function() {
+    this.style.visibility = 'visible';
+  };
+  img.src = q.u;
+
+  const inp = document.getElementById('lg-i');
+  inp.value = '';
+  setTimeout(() => inp.focus(), 50);
+
+  clearInterval(lgTmr);
+  const bar = document.getElementById('lg-bar');
+  bar.style.transition = 'none';
+  bar.style.width = '100%';
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      bar.style.transition = 'width 10s linear';
+      bar.style.width = '0%';
+    });
+  });
+  lgTmr = setTimeout(() => lgFB(false, q.n), 10000);
+}
+
+function lgSub() {
+  const v = document.getElementById('lg-i').value.trim().toLowerCase();
+  if (!v) return;
+  clearTimeout(lgTmr);
+  const q = lgQ[lgI];
+  const ok = q.n.toLowerCase().split(/[ (]/).some(part => part === v || v.includes(part) || part.includes(v));
+  if (ok) lgS++;
+  lgFB(ok, q.n);
+}
+document.getElementById('lg-i').addEventListener('keydown', e => { if (e.key === 'Enter') lgSub(); });
+
+function lgFB(ok, ans) {
+  document.getElementById('lg-img').style.filter = 'blur(0)';
+  document.getElementById('lg-inp').style.display = 'none';
+  const el = document.getElementById('lg-ft');
+  el.textContent = ok ? 'benar!' : 'jawaban: ' + ans;
+  el.style.color = ok ? '#2d6' : '#f55';
+  document.getElementById('lg-sc').textContent = lgS;
+  document.getElementById('lg-fb').style.display = '';
+}
+
+function lgNext() { lgI++; lgI >= 10 ? lgEnd() : lgShow(); }
+
+function lgEnd() {
+  document.getElementById('lg-play').style.display = 'none';
+  const w = lgS >= 7;
+  const sc = document.getElementById('lg-es');
+  sc.textContent = lgS + '/10';
+  sc.style.color = w ? '#2d6' : '#f55';
+  const st = document.getElementById('lg-est');
+  st.textContent = w ? 'kamu dapat cap' : 'belum 7/10';
+  st.style.color = w ? '#2d6' : '#fa0';
+  document.getElementById('lg-end').style.display = '';
+  saveLB('logo', lgS, '/10');
+  if (w) showOv('kamu menang', 'tebak <strong>' + lgS + '/10</strong> logo. tunjukkan ke pengurus.', '<button onclick="closeOv()" class="btn btn-g" style="width:100%">tutup</button>');
+}
+
+// ===== TYPING =====
+const tyS = [
   "HIMA TI adalah keluarga besar mahasiswa Teknologi Informasi",
   "Teknologi Informasi jurusan terbaik di kampus kita",
   "Selamat datang mahasiswa baru angkatan dua ribu dua puluh enam",
@@ -246,23 +452,76 @@ const tyS=[
   "Dari mahasiswa untuk mahasiswa itulah semangat HIMA TI",
   "Kode program adalah bahasa masa depan generasi muda",
 ];
-let tySn='',tyT0=null,tyOn=false,tyIv=null;
-function tyReset(){tyOn=false;clearInterval(tyIv)}
-function tyStart(){
-  tySn=tyS[Math.random()*tyS.length|0];tyT0=null;tyOn=true;clearInterval(tyIv);
-  document.getElementById('ty-end').style.display='none';document.getElementById('ty-play').style.display='';
-  document.getElementById('ty-txt').innerHTML=tySn.split('').map((c,i)=>'<span id="tc'+i+'" style="color:#555">'+(c===' '?'&nbsp;':c)+'</span>').join('');
-  const inp=document.getElementById('ty-i');inp.value='';inp.focus();
-  document.getElementById('ty-w').textContent='0';document.getElementById('ty-t').textContent='0.0';
+let tySn = '', tyT0 = null, tyOn = false, tyIv = null;
+
+function tyReset() { tyOn = false; clearInterval(tyIv); }
+
+function tyStart() {
+  tySn = tyS[Math.random() * tyS.length | 0];
+  tyT0 = null; tyOn = true; clearInterval(tyIv);
+  document.getElementById('ty-end').style.display = 'none';
+  document.getElementById('ty-play').style.display = '';
+  document.getElementById('ty-txt').innerHTML = tySn.split('').map((c, i) =>
+    '<span id="tc' + i + '" style="color:#555">' + (c === ' ' ? '&nbsp;' : c) + '</span>'
+  ).join('');
+  const inp = document.getElementById('ty-i');
+  inp.value = '';
+  inp.focus();
+  document.getElementById('ty-w').textContent = '0';
+  document.getElementById('ty-t').textContent = '0.0';
 }
-document.getElementById('ty-i').addEventListener('input',function(){
-  if(!tyOn)return;
-  if(!tyT0){tyT0=Date.now();tyIv=setInterval(()=>{const s=(Date.now()-tyT0)/1000;const w=this.value.split(' ').filter(x=>x).length;document.getElementById('ty-w').textContent=s>0?Math.round(w/s*60):0;document.getElementById('ty-t').textContent=s.toFixed(1)},100)}
-  const t=this.value;
-  for(let i=0;i<tySn.length;i++){const ch=document.getElementById('tc'+i);if(i<t.length)ch.style.color=t[i]===tySn[i]?'#2d6':'#f55';else if(i===t.length){ch.style.color='#fff';ch.style.background='#333';ch.style.borderRadius='2px'}else{ch.style.color='#555';ch.style.background=''}}
-  if(t.length>=tySn.length){tyOn=false;clearInterval(tyIv);let ok=0;for(let i=0;i<tySn.length;i++)if(t[i]===tySn[i])ok++;const s=(Date.now()-tyT0)/1000;const wpm=Math.round(tySn.split(' ').length/s*60*(ok/tySn.length));tyEnd(wpm,s)}
+
+document.getElementById('ty-i').addEventListener('input', function() {
+  if (!tyOn) return;
+  if (!tyT0) {
+    tyT0 = Date.now();
+    tyIv = setInterval(() => {
+      const s = (Date.now() - tyT0) / 1000;
+      const w = this.value.split(' ').filter(x => x).length;
+      document.getElementById('ty-w').textContent = s > 0 ? Math.round(w / s * 60) : 0;
+      document.getElementById('ty-t').textContent = s.toFixed(1);
+    }, 100);
+  }
+  const t = this.value;
+  for (let i = 0; i < tySn.length; i++) {
+    const ch = document.getElementById('tc' + i);
+    if (i < t.length) {
+      ch.style.color = t[i] === tySn[i] ? '#2d6' : '#f55';
+      ch.style.background = '';
+    } else if (i === t.length) {
+      ch.style.color = '#fff';
+      ch.style.background = '#333';
+      ch.style.borderRadius = '2px';
+    } else {
+      ch.style.color = '#555';
+      ch.style.background = '';
+    }
+  }
+  if (t.length >= tySn.length) {
+    tyOn = false;
+    clearInterval(tyIv);
+    let ok = 0;
+    for (let i = 0; i < tySn.length; i++) if (t[i] === tySn[i]) ok++;
+    const s = (Date.now() - tyT0) / 1000;
+    const wpm = Math.round(tySn.split(' ').length / s * 60 * (ok / tySn.length));
+    tyEnd(wpm, s);
+  }
 });
-function tyEnd(wpm,s){document.getElementById('ty-play').style.display='none';const w=wpm>30;const sc=document.getElementById('ty-ew');sc.textContent=wpm;sc.style.color=w?'#2d6':'#f55';document.getElementById('ty-et').textContent=s.toFixed(1)+' detik';const st=document.getElementById('ty-es');st.textContent=w?'kamu dapat cap':'belum di atas 30 wpm';st.style.color=w?'#2d6':'#fa0';document.getElementById('ty-end').style.display='';saveLB('typing',wpm,' wpm');if(w)showOv('kamu menang','ketik <strong>'+wpm+' wpm</strong>. tunjukkan ke pengurus.','<button onclick="closeOv()" class="btn btn-g" style="width:100%">tutup</button>')}
+
+function tyEnd(wpm, s) {
+  document.getElementById('ty-play').style.display = 'none';
+  const w = wpm > 30;
+  const sc = document.getElementById('ty-ew');
+  sc.textContent = wpm;
+  sc.style.color = w ? '#2d6' : '#f55';
+  document.getElementById('ty-et').textContent = s.toFixed(1) + ' detik';
+  const st = document.getElementById('ty-es');
+  st.textContent = w ? 'kamu dapat cap' : 'belum di atas 30 wpm';
+  st.style.color = w ? '#2d6' : '#fa0';
+  document.getElementById('ty-end').style.display = '';
+  saveLB('typing', wpm, ' wpm');
+  if (w) showOv('kamu menang', 'ketik <strong>' + wpm + ' wpm</strong>. tunjukkan ke pengurus.', '<button onclick="closeOv()" class="btn btn-g" style="width:100%">tutup</button>');
+}
 
 renderLB();
 </script>
