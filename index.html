@@ -68,7 +68,9 @@ h1{font-size:1.3rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase
     <small>ketik kalimat secepat mungkin &bull; menang &gt; 30 WPM</small>
   </a>
 
-  <div style="margin-top:1.5rem;border-top:1px solid #222;padding-top:1rem">
+  <a onclick="resetPlayer()" style="display:block;text-align:center;color:#555;font-size:.75rem;margin-top:.75rem;cursor:pointer;padding:.4rem">ganti pemain</a>
+
+  <div style="margin-top:1rem;border-top:1px solid #222;padding-top:1rem">
     <div style="font-size:.7rem;color:#555;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem">leaderboard</div>
     <div id="lb" style="color:#555;font-size:.8rem">belum ada</div>
   </div>
@@ -229,6 +231,15 @@ function setName() {
   document.getElementById('name-ov').classList.remove('on');
   document.getElementById('disp-name').textContent = v;
   renderLB();
+}
+
+function resetPlayer() {
+  playerName = '';
+  localStorage.removeItem('hima_name');
+  document.getElementById('name-inp').value = '';
+  document.getElementById('disp-name').textContent = '';
+  document.getElementById('name-ov').classList.add('on');
+  setTimeout(() => document.getElementById('name-inp').focus(), 50);
 }
 document.getElementById('name-inp').addEventListener('keydown', e => { if(e.key==='Enter') setName(); });
 
