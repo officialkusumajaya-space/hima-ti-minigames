@@ -218,10 +218,9 @@ const LOGOS=[
 const API_URL = 'https://script.google.com/macros/s/AKfycbyhuaHyWqwGX1SWpyZc2L4aULRBd-LdDxJoYAfU6ZPB5upn_4I_JcBFfLg8aAlBBuE0/exec'; // Auto-configured
 
 function postScore(game, score, unit) {
-  if (!API_URL) return; // no backend = skip
+  if (!API_URL) return;
   fetch(API_URL, {
     method: 'POST',
-    mode: 'no-cors',
     body: JSON.stringify({ name: playerName || 'anon', game, score, unit })
   }).catch(() => {});
 }
@@ -229,10 +228,10 @@ function postScore(game, score, unit) {
 async function fetchLB() {
   if (!API_URL) return null;
   try {
-    const r = await fetch(API_URL + '?t=' + Date.now());
+    const r = await fetch(API_URL, { redirect: 'follow' });
     const d = await r.json();
     return d.ok ? d.scores : null;
-  } catch { return null; }
+  } catch(e) { console.log('LB fetch error:', e); return null; }
 }
 
 // ===== NAME SYSTEM =====
@@ -349,6 +348,22 @@ async function renderLBRemote() {
     '</div>'
   ).join('');
 }
+
+// Load remote LB on startup
+(async () => {
+  const scores = await fetchLB();
+  if (scores && scores.length) {
+    const el = document.getElementById('lb');
+    el.innerHTML = scores.map((s, i) =>
+      '<div class="lb-row">' +
+        '<span style="color:#555;font-size:.7rem;width:1.2rem">' + (i + 1) + '.</span>' +
+        '<span class="lb-name">' + (s.name || 'anon') + '</span>' +
+        '<span class="lb-score">' + s.score + s.unit + '</span>' +
+        '<span class="lb-time">' + (s.time || '') + '</span>' +
+      '</div>'
+    ).join('');
+  }
+})();
 
 // ===== REACTION TIME =====
 let rxSt = 'idle', rxTmr = null, rxT0 = 0;
