@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Setup - HIMA TI Minigames Backend</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:monospace;background:#111;color:#ddd;min-height:100vh;padding:1.5rem;max-width:480px;margin:0 auto;line-height:1.6}
+h1{font-size:1.2rem;margin-bottom:.25rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase}
+.sub{color:#555;font-size:.75rem;margin-bottom:1.5rem}
+h2{font-size:.95rem;font-weight:700;margin:1.5rem 0 .5rem;color:#39f}
+.step{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:6px;padding:.75rem 1rem;margin-bottom:.5rem;font-size:.85rem}
+.step b{color:#2d6}
+pre{background:#0a0a0a;border:1px solid #2a2a2a;border-radius:6px;padding:1rem;overflow-x:auto;font-size:.8rem;line-height:1.5;margin:.75rem 0;white-space:pre-wrap;word-break:break-all}
+.copy-btn{display:block;width:100%;background:#2d6;color:#000;border:none;padding:.6rem;border-radius:5px;font-family:inherit;font-weight:700;font-size:.85rem;cursor:pointer;margin:.5rem 0}
+.copy-btn:active{opacity:.7}
+.warn{background:#2a1a1a;border:1px solid #3a2020;border-radius:6px;padding:.75rem 1rem;margin:.5rem 0;font-size:.8rem;color:#fa0}
+.ok{background:#1a2a1a;border:1px solid #203a20;border-radius:6px;padding:.75rem 1rem;margin:.5rem 0;font-size:.8rem;color:#2d6}
+</style>
+</head>
+<body>
+<h1>HIMA TI</h1>
+<div class="sub">setup backend &mdash; Google Sheets + Apps Script</div>
+
+<h2>step 1</h2>
+<div class="step">buka <b>sheets.google.com</b> &rarr; buat spreadsheet baru</div>
+
+<h2>step 2</h2>
+<div class="step">klik <b>Extensions</b> &rarr; <b>Apps Script</b></div>
+
+<h2>step 3</h2>
+<div class="step">hapus semua code yg ada, paste code di bawah</div>
+<button class="copy-btn" onclick="copyCode()">copy code</button>
+<pre id="code">// === HIMA TI Minigames - Apps Script Backend ===
+const SHEET_NAME = 'scores';
+
+function doGet(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(SHEET_NAME);
+    sheet.appendRow(['name', 'game', 'score', 'unit', 'time']);
+  }
+  const data = sheet.getDataRange().getValues();
+  const today = Utilities.formatDate(new Date(), 'Asia/Makassar', 'yyyy-MM-dd');
+  const scores = [];
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const rowDate = Utilities.formatDate(new Date(row[4]), 'Asia/Makassar', 'yyyy-MM-dd');
+    if (rowDate === today) {
+      scores.push({
+        name: row[0],
+        game: row[1],
+        score: row[2],
+        unit: row[3],
+        time: Utilities.formatDate(new Date(row[4]), 'Asia/Makassar', 'HH:mm')
+      });
+    }
+  }
+  scores.sort((a, b) => {
+    if (a.game === 'reaction') return a.score - b.score;
+    return b.score - a.score;
+  });
+  return ContentService
+    .createTextOutput(JSON.stringify({ ok: true, scores: scores.slice(0, 20) }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(SHEET_NAME);
+    sheet.appendRow(['name', 'game', 'score', 'unit', 'time']);
+  }
+  try {
+    const body = JSON.parse(e.postData.contents);
+    const name = (body.name || 'anon').substring(0, 20);
+    const game = body.game;
+    const score = Number(body.score);
+    const unit = body.unit || '';
+    if (!game || isNaN(score)) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ ok: false, error: 'invalid data' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    sheet.appendRow([name, game, score, unit, new Date()]);
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: false, error: err.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}</pre>
+
+<h2>step 4</h2>
+<div class="step">save: <b>Ctrl+S</b> (atau Cmd+S di Mac)</div>
+
+<h2>step 5</h2>
+<div class="step">
+  klik <b>Deploy</b> &rarr; <b>New deployment</b><br>
+  klik gear icon &rarr; <b>Web app</b><br>
+  description: "HIMA TI API"<br>
+  execute as: <b>Me</b><br>
+  who has access: <b>Anyone</b><br>
+  klik <b>Deploy</b>
+</div>
+<div class="warn">kalau muncul "authorization required" &rarr; klik "Review Permissions" &rarr; pilih akun Google &rarr; "Advanced" &rarr; "Go to ... (unsafe)" &rarr; "Allow"</div>
+
+<h2>step 6</h2>
+<div class="step">copy URL yg muncul setelah deploy</div>
+<div class="ok">URL-nya bentuknya: <b>https://script.google.com/macros/s/xxxxx/exec</b></div>
+
+<h2>step 7</h2>
+<div class="step">paste URL-nya di sini:</div>
+<div style="margin-top:.5rem">
+  <input id="url-inp" type="text" placeholder="https://script.google.com/macros/s/.../exec" style="width:100%;background:#111;border:1px solid #333;padding:.6rem;font-size:.85rem;color:#ddd;border-radius:4px;outline:none;font-family:inherit">
+  <button class="copy-btn" onclick="genHTML()" style="background:#39f;margin-top:.5rem">generate HTML</button>
+</div>
+<div id="result" style="margin-top:1rem"></div>
+
+<script>
+function copyCode() {
+  const code = document.getElementById('code').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'copied!';
+    setTimeout(() => btn.textContent = 'copy code', 2000);
+  });
+}
+
+function genHTML() {
+  const url = document.getElementById('url-inp').value.trim();
+  if (!url || !url.includes('script.google.com')) {
+    document.getElementById('result').innerHTML = '<div class="warn">URL harus dari Google Apps Script</div>';
+    return;
+  }
+  const snippet = `const API_URL = '${url}';`;
+  document.getElementById('result').innerHTML = 
+    '<div class="ok">copy line ini, paste di index.html di bagian yg ada tulisan "PASTE URL APPS SCRIPT DI SINI":</div>' +
+    '<pre>' + snippet + '</pre>' +
+    '<button class="copy-btn" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent).then(()=>{this.textContent=\'copied!\';setTimeout(()=>this.textContent=\'copy line\',2000)})">copy line</button>';
+}
+</script>
+</body>
+</html>
