@@ -214,6 +214,27 @@ const LOGOS=[
   {n:"DJP",u:"https://www.google.com/s2/favicons?domain=pajak.go.id&sz=128"},
 ];
 
+// ===== BACKEND (Google Sheets via Apps Script) =====
+const API_URL = ''; // PASTE URL APPS SCRIPT DI SINI
+
+function postScore(game, score, unit) {
+  if (!API_URL) return; // no backend = skip
+  fetch(API_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    body: JSON.stringify({ name: playerName || 'anon', game, score, unit })
+  }).catch(() => {});
+}
+
+async function fetchLB() {
+  if (!API_URL) return null;
+  try {
+    const r = await fetch(API_URL + '?t=' + Date.now());
+    const d = await r.json();
+    return d.ok ? d.scores : null;
+  } catch { return null; }
+}
+
 // ===== NAME SYSTEM =====
 let playerName = localStorage.getItem('hima_name') || '';
 if (playerName) {
@@ -278,6 +299,7 @@ function getLB() {
 }
 
 function saveLB(game, score, unit) {
+  // Save to localStorage
   const lb = getLB();
   lb.scores.push({
     g: game, s: score, u: unit,
@@ -287,23 +309,43 @@ function saveLB(game, score, unit) {
   lb.scores.sort((a, b) => a.g === 'reaction' ? a.s - b.s : b.s - a.s);
   lb.scores = lb.scores.slice(0, 15);
   localStorage.setItem('hima_lb', JSON.stringify(lb));
+  // Also send to backend
+  postScore(game, score, unit);
   renderLB();
 }
 
 function renderLB() {
+  renderLBLocal();
+  renderLBRemote();
+}
+
+function renderLBLocal() {
   const lb = getLB();
   const el = document.getElementById('lb');
   if (!lb.scores.length) {
     el.innerHTML = '<span style="color:#555">belum ada</span>';
     return;
   }
-  const ic = { reaction: '&#9889;', logo: '&#128270;', typing: '&#9000;' };
   el.innerHTML = lb.scores.map((s, i) =>
     '<div class="lb-row">' +
       '<span style="color:#555;font-size:.7rem;width:1.2rem">' + (i + 1) + '.</span>' +
       '<span class="lb-name">' + (s.name || 'anon') + '</span>' +
       '<span class="lb-score">' + s.s + s.u + '</span>' +
       '<span class="lb-time">' + (s.t || '') + '</span>' +
+    '</div>'
+  ).join('');
+}
+
+async function renderLBRemote() {
+  const scores = await fetchLB();
+  if (!scores || !scores.length) return;
+  const el = document.getElementById('lb');
+  el.innerHTML = scores.map((s, i) =>
+    '<div class="lb-row">' +
+      '<span style="color:#555;font-size:.7rem;width:1.2rem">' + (i + 1) + '.</span>' +
+      '<span class="lb-name">' + (s.name || 'anon') + '</span>' +
+      '<span class="lb-score">' + s.score + s.unit + '</span>' +
+      '<span class="lb-time">' + (s.time || '') + '</span>' +
     '</div>'
   ).join('');
 }
