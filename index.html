@@ -3,537 +3,423 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>HIMA TI Minigames</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        primary: '#6366f1',
-        dark: '#0f172a',
-        card: '#1e293b',
-      }
-    }
-  }
-}
-</script>
+<title>HIMA TI OSPEK 2026</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
-  body { font-family: 'Inter', sans-serif; }
-  .game-hidden { display: none; }
-  .logo-brand {
-    font-size: 2.5rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    transition: filter 0.5s ease;
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0c0f1a;
+    --surface: #151929;
+    --border: #1f2540;
+    --text: #e2e4ed;
+    --muted: #6b7094;
+    --green: #34d399;
+    --red: #f87171;
+    --amber: #fbbf24;
+    --blue: #60a5fa;
+    --purple: #a78bfa;
   }
-  .reaction-box {
-    transition: background-color 0.1s;
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { display: none; min-height: 100dvh; }
+  .page.active { display: flex; flex-direction: column; }
+  .overlay {
+    display: none;
+    position: fixed; inset: 0;
+    z-index: 50;
+    background: rgba(0,0,0,.75);
+    backdrop-filter: blur(4px);
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+  }
+  .overlay.active { display: flex; }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: .75rem 1.5rem;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    font-size: .95rem;
     cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
+    transition: transform .1s, opacity .15s;
   }
-  .fade-in {
-    animation: fadeIn 0.3s ease-in;
+  .btn:active { transform: scale(.97); }
+  .btn-green { background: var(--green); color: #000; }
+  .btn-blue { background: var(--blue); color: #000; }
+  .btn-ghost { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
+
+  /* Inputs */
+  input[type="text"] {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: .85rem 1rem;
+    font-size: 1rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color .15s;
   }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+  input[type="text"]:focus { border-color: var(--blue); }
+
+  /* Animations */
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-  }
-  .pulse { animation: pulse 0.6s ease-in-out; }
-  .confetti-bg {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  }
-  input:focus { outline: none; }
+  .slide-up { animation: slideUp .25s ease-out; }
 </style>
 </head>
-<body class="bg-dark text-white min-h-screen">
+<body>
 
-<!-- HOME SCREEN -->
-<div id="home" class="flex flex-col items-center justify-center min-h-screen px-4 py-8">
-  <div class="text-center mb-8">
-    <h1 class="text-3xl font-900 mb-2">🎮 HIMA TI MINIGAMES</h1>
-    <p class="text-slate-400 text-sm">Pilih game & menangkan cap!</p>
-  </div>
-
-  <div class="w-full max-w-sm space-y-4">
-    <button onclick="startGame('reaction')" class="w-full bg-indigo-600 hover:bg-indigo-500 rounded-2xl p-5 text-left transition-all active:scale-95">
-      <div class="text-2xl mb-1">⚡</div>
-      <div class="font-bold text-lg">Reaction Time</div>
-      <div class="text-indigo-200 text-sm">Seberapa cepat refleksmu?</div>
-      <div class="text-xs text-indigo-300 mt-2">🏆 Menang: &lt; 350ms</div>
-    </button>
-
-    <button onclick="startGame('logo')" class="w-full bg-emerald-600 hover:bg-emerald-500 rounded-2xl p-5 text-left transition-all active:scale-95">
-      <div class="text-2xl mb-1">🔍</div>
-      <div class="font-bold text-lg">Tebak Logo</div>
-      <div class="text-emerald-200 text-sm">Kenali brand dari gambar blur</div>
-      <div class="text-xs text-emerald-300 mt-2">🏆 Menang: ≥ 7 dari 10</div>
-    </button>
-
-    <button onclick="startGame('typing')" class="w-full bg-amber-600 hover:bg-amber-500 rounded-2xl p-5 text-left transition-all active:scale-95">
-      <div class="text-2xl mb-1">⌨️</div>
-      <div class="font-bold text-lg">Typing Race</div>
-      <div class="text-amber-200 text-sm">Ketik secepat mungkin!</div>
-      <div class="text-xs text-amber-300 mt-2">🏆 Menang: &gt; 30 WPM</div>
-    </button>
-  </div>
-
-  <!-- Leaderboard -->
-  <div class="w-full max-w-sm mt-8">
-    <h2 class="text-sm font-bold text-slate-400 mb-3">🏆 Leaderboard Hari Ini</h2>
-    <div id="leaderboard" class="bg-card rounded-xl p-4 text-sm text-slate-300">
-      <div class="text-center text-slate-500">Belum ada skor</div>
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <div style="max-width:24rem; margin:auto; padding:2rem 1rem; width:100%;">
+    <div style="text-align:center; margin-bottom:2rem;">
+      <h1 style="font-size:1.4rem; font-weight:800; letter-spacing:-.02em;">HIMA TI</h1>
+      <p style="color:var(--muted); font-size:.85rem; margin-top:.25rem;">OSPEK 2026 &mdash; Stand Minigames</p>
     </div>
-  </div>
 
-  <p class="text-xs text-slate-600 mt-8">HIMA TI • OSPEK 2026</p>
-</div>
+    <div style="display:flex; flex-direction:column; gap:.75rem;">
+      <button onclick="openGame('reaction')" class="card" style="display:flex; align-items:center; gap:1rem; padding:1.25rem; text-align:left; cursor:pointer; border:1px solid var(--border); color:var(--text);">
+        <div style="width:44px; height:44px; background:#1e1b4b; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">&#9889;</div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-weight:700; font-size:1rem;">Reaction Time</div>
+          <div style="color:var(--muted); font-size:.8rem; margin-top:.15rem;">Menang: reaksi &lt; 350ms</div>
+        </div>
+      </button>
 
-<!-- ==================== REACTION TIME GAME ==================== -->
-<div id="reaction" class="game-hidden min-h-screen flex flex-col items-center justify-center px-4 py-8">
-  <button onclick="goHome()" class="absolute top-4 left-4 text-slate-400 text-sm">← Kembali</button>
-  
-  <div id="reaction-area" class="reaction-box w-full max-w-sm aspect-square rounded-3xl flex flex-col items-center justify-center text-center bg-slate-700">
-    <div id="reaction-content">
-      <div class="text-6xl mb-4">⚡</div>
-      <div id="reaction-text" class="text-xl font-bold">Ketuk untuk mulai</div>
-      <div id="reaction-sub" class="text-slate-400 text-sm mt-2">Tunggu warna hijau, lalu ketuk secepat mungkin!</div>
+      <button onclick="openGame('logo')" class="card" style="display:flex; align-items:center; gap:1rem; padding:1.25rem; text-align:left; cursor:pointer; border:1px solid var(--border); color:var(--text);">
+        <div style="width:44px; height:44px; background:#064e3b; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">&#128270;</div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-weight:700; font-size:1rem;">Tebak Logo</div>
+          <div style="color:var(--muted); font-size:.8rem; margin-top:.15rem;">Menang: tebak 7 dari 10</div>
+        </div>
+      </button>
+
+      <button onclick="openGame('typing')" class="card" style="display:flex; align-items:center; gap:1rem; padding:1.25rem; text-align:left; cursor:pointer; border:1px solid var(--border); color:var(--text);">
+        <div style="width:44px; height:44px; background:#451a03; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;">&#9000;</div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-weight:700; font-size:1rem;">Typing Race</div>
+          <div style="color:var(--muted); font-size:.8rem; margin-top:.15rem;">Menang: ketik &gt; 30 WPM</div>
+        </div>
+      </button>
     </div>
-  </div>
 
-  <div id="reaction-result" class="game-hidden mt-6 text-center fade-in">
-    <div id="reaction-score" class="text-5xl font-900 mb-2"></div>
-    <div id="reaction-status" class="text-lg font-bold mb-4"></div>
-    <div class="space-x-3">
-      <button onclick="resetReaction()" class="bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-xl font-bold">Main Lagi</button>
-      <button onclick="goHome()" class="bg-slate-700 hover:bg-slate-600 px-6 py-3 rounded-xl font-bold">Home</button>
+    <div class="card" style="margin-top:1.5rem; padding:1rem;">
+      <div style="font-size:.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:.75rem;">Skor hari ini</div>
+      <div id="lb"><div style="color:var(--muted); font-size:.85rem;">Belum ada</div></div>
     </div>
+
+    <p style="text-align:center; color:var(--muted); font-size:.7rem; margin-top:1.5rem;">HIMA TI &bull; 2026</p>
   </div>
 </div>
 
-<!-- ==================== LOGO QUIZ GAME ==================== -->
-<div id="logo" class="game-hidden min-h-screen flex flex-col items-center justify-center px-4 py-8">
-  <button onclick="goHome()" class="absolute top-4 left-4 text-slate-400 text-sm">← Kembali</button>
-  
-  <div id="logo-area" class="w-full max-w-sm">
-    <div class="flex justify-between items-center mb-4">
-      <div class="text-sm text-slate-400">Soal <span id="logo-num">1</span>/10</div>
-      <div class="text-sm text-slate-400">Skor: <span id="logo-score">0</span></div>
+<!-- REACTION -->
+<div id="page-reaction" class="page">
+  <div style="max-width:24rem; margin:auto; padding:1rem; width:100%; position:relative;">
+    <button onclick="goHome()" style="background:none; border:none; color:var(--muted); font-size:.85rem; cursor:pointer; padding:.25rem;">&larr; Kembali</button>
+    <div id="rx-box" class="card" style="margin-top:1rem; aspect-ratio:1/1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; cursor:pointer; background:var(--surface); -webkit-user-select:none; user-select:none; -webkit-tap-highlight-color:transparent; transition: background .08s;">
+      <div id="rx-text" style="font-size:1.25rem; font-weight:700;">Ketuk untuk mulai</div>
+      <div id="rx-sub" style="color:var(--muted); font-size:.8rem; margin-top:.5rem;">Tunggu warna hijau, ketuk secepat mungkin</div>
     </div>
-
-    <div id="logo-display" class="bg-card rounded-2xl p-8 flex items-center justify-center min-h-[200px] mb-4">
-      <div id="logo-brand" class="logo-brand"></div>
-    </div>
-
-    <div id="logo-timer-bar" class="w-full bg-slate-700 rounded-full h-2 mb-4">
-      <div id="logo-timer-fill" class="bg-emerald-500 h-2 rounded-full transition-all" style="width: 100%"></div>
-    </div>
-
-    <div id="logo-input-area">
-      <input id="logo-input" type="text" placeholder="Tebak brand..." 
-        class="w-full bg-slate-700 border-2 border-slate-600 focus:border-emerald-500 rounded-xl px-4 py-3 text-lg text-center"
-        autocomplete="off" autocorrect="off" autocapitalize="off">
-      <button id="logo-submit" onclick="submitLogoGuess()" 
-        class="w-full mt-3 bg-emerald-600 hover:bg-emerald-500 py-3 rounded-xl font-bold">Jawab</button>
-    </div>
-
-    <div id="logo-feedback" class="game-hidden mt-4 text-center fade-in">
-      <div id="logo-feedback-text" class="text-xl font-bold mb-2"></div>
-      <button onclick="nextLogo()" class="bg-emerald-600 hover:bg-emerald-500 px-6 py-2 rounded-xl font-bold">Lanjut →</button>
-    </div>
-  </div>
-
-  <div id="logo-result" class="game-hidden text-center fade-in w-full max-w-sm">
-    <div class="text-6xl mb-4" id="logo-result-emoji"></div>
-    <div id="logo-result-score" class="text-4xl font-900 mb-2"></div>
-    <div id="logo-result-status" class="text-lg font-bold mb-4"></div>
-    <div class="space-x-3">
-      <button onclick="startGame('logo')" class="bg-emerald-600 hover:bg-emerald-500 px-6 py-3 rounded-xl font-bold">Main Lagi</button>
-      <button onclick="goHome()" class="bg-slate-700 hover:bg-slate-600 px-6 py-3 rounded-xl font-bold">Home</button>
+    <div id="rx-result" style="display:none; text-align:center; margin-top:1.25rem;" class="slide-up">
+      <div id="rx-score" style="font-size:2.5rem; font-weight:900;"></div>
+      <div id="rx-status" style="font-weight:700; margin-top:.25rem;"></div>
+      <div style="display:flex; gap:.5rem; justify-content:center; margin-top:1rem;">
+        <button onclick="rxReset()" class="btn btn-blue">Main lagi</button>
+        <button onclick="goHome()" class="btn btn-ghost">Home</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ==================== TYPING RACE GAME ==================== -->
-<div id="typing" class="game-hidden min-h-screen flex flex-col items-center justify-center px-4 py-8">
-  <button onclick="goHome()" class="absolute top-4 left-4 text-slate-400 text-sm">← Kembali</button>
-  
-  <div id="typing-area" class="w-full max-w-sm">
-    <div class="flex justify-between items-center mb-4">
-      <div class="text-sm text-slate-400">WPM: <span id="typing-wpm">0</span></div>
-      <div class="text-sm text-slate-400">Waktu: <span id="typing-time">0.0</span>s</div>
+<!-- LOGO QUIZ -->
+<div id="page-logo" class="page">
+  <div style="max-width:24rem; margin:auto; padding:1rem; width:100%;">
+    <button onclick="goHome()" style="background:none; border:none; color:var(--muted); font-size:.85rem; cursor:pointer; padding:.25rem;">&larr; Kembali</button>
+    <div id="lg-play">
+      <div style="display:flex; justify-content:space-between; margin-top:.75rem; margin-bottom:.75rem;">
+        <span style="color:var(--muted); font-size:.8rem;">Soal <span id="lg-num">1</span>/10</span>
+        <span style="color:var(--muted); font-size:.8rem;">Skor: <span id="lg-score">0</span></span>
+      </div>
+      <div class="card" style="padding:2.5rem; display:flex; align-items:center; justify-content:center; min-height:140px; margin-bottom:.75rem;">
+        <div id="lg-brand" style="font-size:2rem; font-weight:900; text-transform:uppercase; letter-spacing:.03em; transition:filter .4s;"></div>
+      </div>
+      <div style="width:100%; background:var(--border); border-radius:4px; height:3px; margin-bottom:.75rem;">
+        <div id="lg-bar" style="height:100%; background:var(--green); border-radius:4px; width:100%;"></div>
+      </div>
+      <div id="lg-input-area">
+        <input id="lg-input" type="text" placeholder="Brand apa ini?" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <button onclick="lgSubmit()" class="btn btn-green" style="width:100%; margin-top:.5rem;">Jawab</button>
+      </div>
+      <div id="lg-fb" style="display:none; text-align:center; margin-top:1rem;" class="slide-up">
+        <div id="lg-fb-text" style="font-weight:700; font-size:1.1rem;"></div>
+        <button onclick="lgNext()" class="btn btn-green" style="margin-top:.75rem;">Lanjut &rarr;</button>
+      </div>
     </div>
-
-    <div id="typing-text" class="bg-card rounded-2xl p-5 text-lg leading-relaxed mb-4 font-mono"></div>
-
-    <input id="typing-input" type="text" placeholder="Ketik di sini..."
-      class="w-full bg-slate-700 border-2 border-slate-600 focus:border-amber-500 rounded-xl px-4 py-3 text-lg"
-      autocomplete="off" autocorrect="off" autocapitalize="off" autocorrect="off" spellcheck="false">
-
-    <div id="typing-hint" class="text-xs text-slate-500 mt-2 text-center">Ketuk input lalu mulai mengetik</div>
-  </div>
-
-  <div id="typing-result" class="game-hidden text-center fade-in w-full max-w-sm">
-    <div class="text-6xl mb-4" id="typing-result-emoji"></div>
-    <div id="typing-result-wpm" class="text-5xl font-900 mb-1"></div>
-    <div class="text-slate-400 mb-1">WPM</div>
-    <div id="typing-result-time" class="text-lg text-slate-300 mb-2"></div>
-    <div id="typing-result-status" class="text-lg font-bold mb-4"></div>
-    <div class="space-x-3">
-      <button onclick="startGame('typing')" class="bg-amber-600 hover:bg-amber-500 px-6 py-3 rounded-xl font-bold">Main Lagi</button>
-      <button onclick="goHome()" class="bg-slate-700 hover:bg-slate-600 px-6 py-3 rounded-xl font-bold">Home</button>
+    <div id="lg-end" style="display:none; text-align:center; padding-top:3rem;" class="slide-up">
+      <div id="lg-end-score" style="font-size:2.5rem; font-weight:900;"></div>
+      <div id="lg-end-status" style="font-weight:700; margin-top:.25rem;"></div>
+      <div style="display:flex; gap:.5rem; justify-content:center; margin-top:1.25rem;">
+        <button onclick="openGame('logo')" class="btn btn-green">Main lagi</button>
+        <button onclick="goHome()" class="btn btn-ghost">Home</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ==================== WIN/LOSE OVERLAY ==================== -->
-<div id="overlay" class="game-hidden fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
-  <div class="bg-card rounded-3xl p-8 max-w-sm w-full text-center fade-in">
-    <div id="overlay-emoji" class="text-6xl mb-4"></div>
-    <h2 id="overlay-title" class="text-2xl font-900 mb-2"></h2>
-    <p id="overlay-desc" class="text-slate-300 mb-6"></p>
-    <div id="overlay-cta" class="space-y-3"></div>
+<!-- TYPING -->
+<div id="page-typing" class="page">
+  <div style="max-width:24rem; margin:auto; padding:1rem; width:100%;">
+    <button onclick="goHome()" style="background:none; border:none; color:var(--muted); font-size:.85rem; cursor:pointer; padding:.25rem;">&larr; Kembali</button>
+    <div id="ty-play">
+      <div style="display:flex; justify-content:space-between; margin-top:.75rem; margin-bottom:.75rem;">
+        <span style="color:var(--muted); font-size:.8rem;">WPM: <span id="ty-wpm">0</span></span>
+        <span style="color:var(--muted); font-size:.8rem;">Waktu: <span id="ty-time">0.0</span>s</span>
+      </div>
+      <div id="ty-text" class="card" style="padding:1.25rem; font-size:1rem; line-height:1.6; font-family:monospace; margin-bottom:.75rem;"></div>
+      <input id="ty-input" type="text" placeholder="Ketik di sini..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <div style="color:var(--muted); font-size:.75rem; text-align:center; margin-top:.4rem;">Ketuk kolom lalu mulai mengetik</div>
+    </div>
+    <div id="ty-end" style="display:none; text-align:center; padding-top:3rem;" class="slide-up">
+      <div id="ty-end-wpm" style="font-size:2.5rem; font-weight:900;"></div>
+      <div style="color:var(--muted); font-size:.8rem;">WPM</div>
+      <div id="ty-end-time" style="color:var(--muted); font-size:.85rem; margin-top:.25rem;"></div>
+      <div id="ty-end-status" style="font-weight:700; margin-top:.25rem;"></div>
+      <div style="display:flex; gap:.5rem; justify-content:center; margin-top:1.25rem;">
+        <button onclick="openGame('typing')" class="btn btn-blue">Main lagi</button>
+        <button onclick="goHome()" class="btn btn-ghost">Home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div id="overlay" class="overlay">
+  <div class="card slide-up" style="max-width:22rem; width:100%; padding:2rem; text-align:center;">
+    <div id="ov-title" style="font-size:1.4rem; font-weight:800; margin-bottom:.5rem;"></div>
+    <div id="ov-desc" style="color:var(--muted); font-size:.9rem; margin-bottom:1.25rem;"></div>
+    <div id="ov-cta"></div>
   </div>
 </div>
 
 <script>
-// ==================== STATE ====================
-let currentGame = null;
-
-// ==================== LEADERBOARD ====================
-function getToday() {
-  return new Date().toISOString().split('T')[0];
+// ===== NAVIGATION =====
+function goHome() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-home').classList.add('active');
+  document.getElementById('overlay').classList.remove('active');
+  rxReset();
+  lgReset();
+  tyReset();
+  renderLB();
 }
 
-function getLeaderboard() {
-  const data = JSON.parse(localStorage.getItem('hima_lb') || '{}');
-  const today = getToday();
-  if (data.date !== today) {
-    return { date: today, scores: [] };
-  }
-  return data;
+function openGame(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.getElementById('overlay').classList.remove('active');
+  if (name === 'reaction') rxReset();
+  if (name === 'logo') lgStart();
+  if (name === 'typing') tyStart();
 }
 
-function saveScore(game, score, unit) {
-  const lb = getLeaderboard();
-  lb.scores.push({ game, score, unit, time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) });
-  lb.scores.sort((a, b) => {
-    if (a.game === 'reaction') return a.score - b.score;
-    if (a.game === 'logo') return b.score - a.score;
-    if (a.game === 'typing') return b.score - a.score;
-    return 0;
-  });
+function showOv(title, desc, cta) {
+  document.getElementById('ov-title').textContent = title;
+  document.getElementById('ov-desc').innerHTML = desc;
+  document.getElementById('ov-cta').innerHTML = cta;
+  document.getElementById('overlay').classList.add('active');
+}
+
+// ===== LEADERBOARD =====
+function todayKey() { return new Date().toISOString().split('T')[0]; }
+
+function getLB() {
+  const d = JSON.parse(localStorage.getItem('hima_lb') || '{}');
+  return d.date === todayKey() ? d : { date: todayKey(), scores: [] };
+}
+
+function saveLB(game, score, unit) {
+  const lb = getLB();
+  lb.scores.push({ game, score, unit, t: new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}) });
+  lb.scores.sort((a,b) => a.game === 'reaction' ? a.score - b.score : b.score - a.score);
   lb.scores = lb.scores.slice(0, 10);
   localStorage.setItem('hima_lb', JSON.stringify(lb));
-  renderLeaderboard();
+  renderLB();
 }
 
-function renderLeaderboard() {
-  const lb = getLeaderboard();
-  const el = document.getElementById('leaderboard');
-  if (lb.scores.length === 0) {
-    el.innerHTML = '<div class="text-center text-slate-500">Belum ada skor</div>';
-    return;
-  }
-  const icons = { reaction: '⚡', logo: '🔍', typing: '⌨️' };
-  const names = { reaction: 'Reaction', logo: 'Logo Quiz', typing: 'Typing' };
-  el.innerHTML = lb.scores.map((s, i) => `
-    <div class="flex justify-between items-center py-2 ${i > 0 ? 'border-t border-slate-700' : ''}">
-      <div class="flex items-center gap-2">
-        <span class="text-xs text-slate-500 w-4">${i + 1}.</span>
-        <span>${icons[s.game]}</span>
-        <span class="font-bold">${s.score}${s.unit}</span>
-      </div>
-      <div class="text-xs text-slate-500">${s.time}</div>
-    </div>
-  `).join('');
+function renderLB() {
+  const lb = getLB();
+  const el = document.getElementById('lb');
+  if (!lb.scores.length) { el.innerHTML = '<div style="color:var(--muted);font-size:.85rem;">Belum ada</div>'; return; }
+  const icon = { reaction:'&#9889;', logo:'&#128270;', typing:'&#9000;' };
+  el.innerHTML = lb.scores.map((s,i) => `<div style="display:flex;justify-content:space-between;align-items:center;padding:.4rem 0;${i?'border-top:1px solid var(--border);':''}"><span style="font-size:.85rem;"><span style="color:var(--muted);width:1.5rem;display:inline-block;">${i+1}.</span>${icon[s.game]} ${s.score}${s.unit}</span><span style="color:var(--muted);font-size:.75rem;">${s.t}</span></div>`).join('');
 }
 
-// ==================== NAVIGATION ====================
-function goHome() {
-  document.querySelectorAll('[id]').forEach(el => {
-    if (['home', 'overlay'].includes(el.id)) return;
-    if (el.classList.contains('game-hidden') || el.closest('.game-hidden')) return;
-  });
-  
-  document.getElementById('home').classList.remove('game-hidden');
-  ['reaction', 'logo', 'typing'].forEach(g => {
-    document.getElementById(g).classList.add('game-hidden');
-  });
-  document.getElementById('overlay').classList.add('game-hidden');
-  
-  // Reset states
-  resetReaction();
-  resetLogo();
-  resetTyping();
-  renderLeaderboard();
-  currentGame = null;
+// ===== REACTION TIME =====
+let rxState = 'idle', rxTimeout = null, rxStart = 0;
+
+function rxReset() {
+  rxState = 'idle';
+  clearTimeout(rxTimeout);
+  const box = document.getElementById('rx-box');
+  box.style.background = 'var(--surface)';
+  document.getElementById('rx-text').textContent = 'Ketuk untuk mulai';
+  document.getElementById('rx-sub').textContent = 'Tunggu warna hijau, ketuk secepat mungkin';
+  document.getElementById('rx-result').style.display = 'none';
 }
 
-function startGame(game) {
-  document.getElementById('home').classList.add('game-hidden');
-  document.getElementById(game).classList.remove('game-hidden');
-  document.getElementById('overlay').classList.add('game-hidden');
-  currentGame = game;
-  
-  if (game === 'reaction') resetReaction();
-  if (game === 'logo') startLogoGame();
-  if (game === 'typing') startTypingGame();
-}
-
-function showOverlay(emoji, title, desc, buttons) {
-  const overlay = document.getElementById('overlay');
-  document.getElementById('overlay-emoji').textContent = emoji;
-  document.getElementById('overlay-title').textContent = title;
-  document.getElementById('overlay-desc').innerHTML = desc;
-  document.getElementById('overlay-cta').innerHTML = buttons;
-  overlay.classList.remove('game-hidden');
-}
-
-function closeOverlay() {
-  document.getElementById('overlay').classList.add('game-hidden');
-}
-
-// ==================== REACTION TIME ====================
-let reactionState = 'idle'; // idle, waiting, ready, done
-let reactionTimeout = null;
-let reactionStart = 0;
-
-function resetReaction() {
-  reactionState = 'idle';
-  clearTimeout(reactionTimeout);
-  const area = document.getElementById('reaction-area');
-  area.style.backgroundColor = '#334155'; // slate-700
-  document.getElementById('reaction-text').textContent = 'Ketuk untuk mulai';
-  document.getElementById('reaction-sub').textContent = 'Tunggu warna hijau, lalu ketuk secepat mungkin!';
-  document.getElementById('reaction-result').classList.add('game-hidden');
-}
-
-document.getElementById('reaction-area').addEventListener('click', function(e) {
-  if (reactionState === 'idle') {
-    // Start waiting
-    reactionState = 'waiting';
-    this.style.backgroundColor = '#dc2626'; // red
-    document.getElementById('reaction-text').textContent = 'Tunggu...';
-    document.getElementById('reaction-sub').textContent = 'Jangan ketuk hijau dulu!';
-    
-    const delay = 1500 + Math.random() * 3000; // 1.5-4.5s
-    reactionTimeout = setTimeout(() => {
-      reactionState = 'ready';
-      this.style.backgroundColor = '#16a34a'; // green
-      reactionStart = Date.now();
-      document.getElementById('reaction-text').textContent = 'KETUK SEKARANG!';
-      document.getElementById('reaction-sub').textContent = '';
-    }, delay);
-    
-  } else if (reactionState === 'waiting') {
-    // Too early!
-    clearTimeout(reactionTimeout);
-    reactionState = 'idle';
-    this.style.backgroundColor = '#334155';
-    document.getElementById('reaction-text').textContent = 'Terlalu cepat!';
-    document.getElementById('reaction-sub').textContent = 'Ketuk untuk coba lagi';
-    setTimeout(() => resetReaction(), 1500);
-    
-  } else if (reactionState === 'ready') {
-    // Got it!
-    const ms = Date.now() - reactionStart;
-    reactionState = 'done';
-    this.style.backgroundColor = '#334155';
-    document.getElementById('reaction-text').textContent = ms + ' ms';
-    document.getElementById('reaction-sub').textContent = '';
-    
+document.getElementById('rx-box').addEventListener('click', function() {
+  if (rxState === 'idle') {
+    rxState = 'waiting';
+    this.style.background = '#991b1b';
+    document.getElementById('rx-text').textContent = 'Tunggu...';
+    document.getElementById('rx-sub').textContent = 'Jangan ketuk dulu';
+    rxTimeout = setTimeout(() => {
+      rxState = 'ready';
+      this.style.background = '#065f46';
+      rxStart = Date.now();
+      document.getElementById('rx-text').textContent = 'KETUK!';
+      document.getElementById('rx-sub').textContent = '';
+    }, 1500 + Math.random() * 3000);
+  } else if (rxState === 'waiting') {
+    clearTimeout(rxTimeout);
+    this.style.background = 'var(--surface)';
+    document.getElementById('rx-text').textContent = 'Kepagian!';
+    document.getElementById('rx-sub').textContent = 'Ketuk untuk coba lagi';
+    rxState = 'idle';
+    setTimeout(rxReset, 1200);
+  } else if (rxState === 'ready') {
+    const ms = Date.now() - rxStart;
+    rxState = 'done';
+    this.style.background = 'var(--surface)';
+    document.getElementById('rx-text').textContent = ms + 'ms';
+    document.getElementById('rx-sub').textContent = '';
     const won = ms < 350;
-    document.getElementById('reaction-score').textContent = ms + 'ms';
-    document.getElementById('reaction-score').className = 'text-5xl font-900 mb-2 ' + (won ? 'text-emerald-400' : 'text-red-400');
-    document.getElementById('reaction-status').textContent = won ? '🏆 Menang! Kamu dapat cap!' : '💪 Belum < 350ms, coba lagi!';
-    document.getElementById('reaction-status').className = 'text-lg font-bold mb-4 ' + (won ? 'text-emerald-400' : 'text-amber-400');
-    document.getElementById('reaction-result').classList.remove('game-hidden');
-    
-    saveScore('reaction', ms, 'ms');
-    
-    if (won) {
-      showOverlay('🏆', 'SELAMAT!', 'Reaction time <strong>' + ms + 'ms</strong>! Kamu dapat cap HIMA TI!', [
-        '<button onclick="closeOverlay()" class="w-full bg-emerald-600 hover:bg-emerald-500 py-3 rounded-xl font-bold">Ambil Cap! 🎉</button>',
-        '<button onclick="startGame(\'reaction\')" class="w-full bg-slate-700 hover:bg-slate-600 py-3 rounded-xl font-bold mt-2">Main Lagi</button>'
-      ]);
-    }
+    const sc = document.getElementById('rx-score');
+    sc.textContent = ms + 'ms';
+    sc.style.color = won ? 'var(--green)' : 'var(--red)';
+    const st = document.getElementById('rx-status');
+    st.textContent = won ? 'Kamu dapat cap!' : 'Belum di bawah 350ms, coba lagi';
+    st.style.color = won ? 'var(--green)' : 'var(--amber)';
+    document.getElementById('rx-result').style.display = '';
+    saveLB('reaction', ms, 'ms');
+    if (won) showOv('Kamu menang', 'Reaction time <strong>' + ms + 'ms</strong>. Tunjukkan hasil ini ke pengurus untuk ambil cap.', '<button onclick="closeOv()" class="btn btn-green" style="width:100%;">Tutup</button>');
   }
 });
 
-// ==================== LOGO QUIZ ====================
-const logoData = [
-  { text: 'Google', colors: ['#4285f4','#ea4335','#fbbc05','#4285f4','#34a853','#ea4335'], answers: ['google'] },
-  { text: 'Tokopedia', colors: ['#42b549'], answers: ['tokopedia', 'toped'] },
-  { text: 'Gojek', colors: ['#00aa13'], answers: ['gojek', 'go-jek'] },
-  { text: 'Shopee', colors: ['#ee4d2d'], answers: ['shopee'] },
-  { text: 'Netflix', colors: ['#e50914'], answers: ['netflix'] },
-  { text: 'Spotify', colors: ['#1db954'], answers: ['spotify'] },
-  { text: 'Samsung', colors: ['#1428a0'], answers: ['samsung'] },
-  { text: 'WhatsApp', colors: ['#25d366'], answers: ['whatsapp', 'wa'] },
-  { text: 'Grab', colors: ['#00b14f'], answers: ['grab'] },
-  { text: 'BCA', colors: ['#003d79'], answers: ['bca'] },
-  { text: 'Dana', colors: ['#108ee9'], answers: ['dana'] },
-  { text: 'OVO', colors: ['#4c3494'], answers: ['ovo'] },
-  { text: 'BRI', colors: ['#003d79'], answers: ['bri'] },
-  { text: 'Apple', colors: ['#555555'], answers: ['apple', 'apel'] },
-  { text: 'Microsoft', colors: ['#f25022','#7fba00','#00a4ef','#ffb900'], answers: ['microsoft'] },
-  { text: 'Instagram', colors: ['#e1306c','#f77737','#fcaf45'], answers: ['instagram', 'ig'] },
-  { text: 'TikTok', colors: ['#010101','#ee1d52','#69c9d0'], answers: ['tiktok', 'tik tok'] },
-  { text: 'X', colors: ['#000000'], answers: ['x', 'twitter', 'x twitter'] },
-  { text: 'Dana', colors: ['#108ee9'], answers: ['dana'] },
-  { text: 'GoPay', colors: ['#00aa13'], answers: ['gopay', 'go pay'] },
+function closeOv() { document.getElementById('overlay').classList.remove('active'); }
+
+// ===== LOGO QUIZ =====
+const lgData = [
+  { text:'Google', c:['#4285f4','#ea4335','#fbbc05','#4285f4','#34a853','#ea4335'], a:['google'] },
+  { text:'Tokopedia', c:['#42b549'], a:['tokopedia','toped'] },
+  { text:'Gojek', c:['#00aa13'], a:['gojek','gojek'] },
+  { text:'Shopee', c:['#ee4d2d'], a:['shopee'] },
+  { text:'Netflix', c:['#e50914'], a:['netflix'] },
+  { text:'Spotify', c:['#1db954'], a:['spotify'] },
+  { text:'Samsung', c:['#1428a0'], a:['samsung'] },
+  { text:'WhatsApp', c:['#25d366'], a:['whatsapp','wa'] },
+  { text:'Grab', c:['#00b14f'], a:['grab'] },
+  { text:'BCA', c:['#003d79'], a:['bca'] },
+  { text:'Dana', c:['#108ee9'], a:['dana'] },
+  { text:'OVO', c:['#4c3494'], a:['ovo'] },
+  { text:'BRI', c:['#003d79'], a:['bri'] },
+  { text:'Apple', c:['#555'], a:['apple','apel'] },
+  { text:'Instagram', c:['#e1306c','#f77737','#fcaf45'], a:['instagram','ig'] },
+  { text:'TikTok', c:['#010101','#ee1d52','#69c9d0'], a:['tiktok'] },
+  { text:'GoPay', c:['#00aa13'], a:['gopay'] },
+  { text:'Microsoft', c:['#f25022','#7fba00','#00a4ef','#ffb900'], a:['microsoft','ms'] },
+  { text:'X', c:['#fff'], a:['x','twitter'] },
+  { text:'Line', c:['#00c300'], a:['line'] },
 ];
+let lgQs=[], lgI=0, lgS=0, lgTmr=null;
 
-let logoQuestions = [];
-let logoIdx = 0;
-let logoScore = 0;
-let logoTimer = null;
-let logoTimeLeft = 0;
+function lgShuf(a) { for(let i=a.length-1;i>0;i--){const j=Math.random()*i+1|0;[a[i],a[j]]=[a[j],a[i]];} return a; }
+function lgReset() { clearInterval(lgTmr); lgI=0; lgS=0; }
 
-function shuffleArray(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+function lgStart() {
+  lgQs = lgShuf([...lgData]).slice(0,10);
+  lgI = 0; lgS = 0;
+  document.getElementById('lg-end').style.display = 'none';
+  document.getElementById('lg-play').style.display = '';
+  lgShow();
 }
 
-function startLogoGame() {
-  logoQuestions = shuffleArray(logoData).slice(0, 10);
-  logoIdx = 0;
-  logoScore = 0;
-  document.getElementById('logo-result').classList.add('game-hidden');
-  document.getElementById('logo-area').style.display = '';
-  showLogoQuestion();
+function lgShow() {
+  const q = lgQs[lgI];
+  document.getElementById('lg-num').textContent = lgI + 1;
+  document.getElementById('lg-score').textContent = lgS;
+  document.getElementById('lg-fb').style.display = 'none';
+  document.getElementById('lg-input-area').style.display = '';
+  const br = document.getElementById('lg-brand');
+  if (q.c.length === 1) { br.style.color = q.c[0]; br.textContent = q.text; }
+  else { br.innerHTML = q.text.split('').map((ch,i)=>`<span style="color:${q.c[i%q.c.length]}">${ch}</span>`).join(''); }
+  br.style.filter = 'blur(10px)';
+  const inp = document.getElementById('lg-input');
+  inp.value = '';
+  inp.focus();
+  clearInterval(lgTmr);
+  const bar = document.getElementById('lg-bar');
+  bar.style.transition = 'none'; bar.style.width = '100%';
+  requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ bar.style.transition='width 10s linear'; bar.style.width='0%'; }); });
+  lgTmr = setTimeout(()=> lgFB(false, q.text), 10000);
 }
 
-function resetLogo() {
-  clearInterval(logoTimer);
-  logoIdx = 0;
-  logoScore = 0;
+function lgSubmit() {
+  const v = document.getElementById('lg-input').value.trim().toLowerCase();
+  if (!v) return;
+  clearTimeout(lgTmr);
+  const q = lgQs[lgI];
+  const ok = q.a.includes(v);
+  if (ok) lgS++;
+  lgFB(ok, q.text);
+}
+document.getElementById('lg-input').addEventListener('keydown', e => { if(e.key==='Enter') lgSubmit(); });
+
+function lgFB(ok, ans) {
+  document.getElementById('lg-brand').style.filter = 'blur(0)';
+  document.getElementById('lg-input-area').style.display = 'none';
+  const el = document.getElementById('lg-fb-text');
+  el.textContent = ok ? 'Benar!' : 'Jawaban: ' + ans;
+  el.style.color = ok ? 'var(--green)' : 'var(--red)';
+  document.getElementById('lg-score').textContent = lgS;
+  document.getElementById('lg-fb').style.display = '';
 }
 
-function showLogoQuestion() {
-  const q = logoQuestions[logoIdx];
-  document.getElementById('logo-num').textContent = logoIdx + 1;
-  document.getElementById('logo-score').textContent = logoScore;
-  document.getElementById('logo-feedback').classList.add('game-hidden');
-  document.getElementById('logo-input-area').style.display = '';
-  
-  // Render blurred logo
-  const brand = document.getElementById('logo-brand');
-  if (q.colors.length === 1) {
-    brand.style.color = q.colors[0];
-    brand.textContent = q.text;
-  } else {
-    brand.innerHTML = q.text.split('').map((ch, i) => 
-      `<span style="color:${q.colors[i % q.colors.length]}">${ch}</span>`
-    ).join('');
-  }
-  brand.style.filter = 'blur(10px)';
-  
-  // Reset input
-  const input = document.getElementById('logo-input');
-  input.value = '';
-  input.focus();
-  
-  // Start timer (10s)
-  logoTimeLeft = 100;
-  clearInterval(logoTimer);
-  const fill = document.getElementById('logo-timer-fill');
-  fill.style.width = '100%';
-  fill.style.transition = 'none';
-  
-  requestAnimationFrame(() => {
-    fill.style.transition = 'width 10s linear';
-    fill.style.width = '0%';
-  });
-  
-  logoTimer = setTimeout(() => {
-    // Time up - wrong answer
-    showLogoFeedback(false, q.text);
-  }, 10000);
+function lgNext() { lgI++; lgI >= 10 ? lgEnd() : lgShow(); }
+
+function lgEnd() {
+  document.getElementById('lg-play').style.display = 'none';
+  const won = lgS >= 7;
+  const sc = document.getElementById('lg-end-score');
+  sc.textContent = lgS + '/10';
+  sc.style.color = won ? 'var(--green)' : 'var(--red)';
+  const st = document.getElementById('lg-end-status');
+  st.textContent = won ? 'Kamu dapat cap!' : 'Belum 7/10, coba lagi';
+  st.style.color = won ? 'var(--green)' : 'var(--amber)';
+  document.getElementById('lg-end').style.display = '';
+  saveLB('logo', lgS, '/10');
+  if (won) showOv('Kamu menang', 'Tebak <strong>'+lgS+'/10</strong> logo. Tunjukkan ke pengurus untuk ambil cap.', '<button onclick="closeOv()" class="btn btn-green" style="width:100%;">Tutup</button>');
 }
 
-function submitLogoGuess() {
-  const input = document.getElementById('logo-input');
-  const guess = input.value.trim().toLowerCase();
-  if (!guess) return;
-  
-  clearTimeout(logoTimer);
-  const q = logoQuestions[logoIdx];
-  const correct = q.answers.includes(guess);
-  
-  if (correct) logoScore++;
-  showLogoFeedback(correct, q.text);
-}
-
-document.getElementById('logo-input').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') submitLogoGuess();
-});
-
-function showLogoFeedback(correct, answer) {
-  // Unblur the logo
-  document.getElementById('logo-brand').style.filter = 'blur(0px)';
-  document.getElementById('logo-input-area').style.display = 'none';
-  
-  const fb = document.getElementById('logo-feedback');
-  const text = document.getElementById('logo-feedback-text');
-  
-  if (correct) {
-    text.textContent = '✅ Benar!';
-    text.className = 'text-xl font-bold mb-2 text-emerald-400';
-  } else {
-    text.textContent = '❌ Jawaban: ' + answer;
-    text.className = 'text-xl font-bold mb-2 text-red-400';
-  }
-  
-  document.getElementById('logo-score').textContent = logoScore;
-  fb.classList.remove('game-hidden');
-}
-
-function nextLogo() {
-  logoIdx++;
-  if (logoIdx >= 10) {
-    endLogoGame();
-  } else {
-    showLogoQuestion();
-  }
-}
-
-function endLogoGame() {
-  document.getElementById('logo-area').style.display = 'none';
-  const won = logoScore >= 7;
-  
-  document.getElementById('logo-result-emoji').textContent = won ? '🏆' : '😅';
-  document.getElementById('logo-result-score').textContent = logoScore + '/10';
-  document.getElementById('logo-result-score').className = 'text-4xl font-900 mb-2 ' + (won ? 'text-emerald-400' : 'text-red-400');
-  document.getElementById('logo-result-status').textContent = won ? 'Menang! Kamu dapat cap!' : 'Belum ≥ 7, coba lagi!';
-  document.getElementById('logo-result-status').className = 'text-lg font-bold mb-4 ' + (won ? 'text-emerald-400' : 'text-amber-400');
-  document.getElementById('logo-result').classList.remove('game-hidden');
-  
-  saveScore('logo', logoScore, '/10');
-  
-  if (won) {
-    showOverlay('🔍', 'JAGO!', 'Tebak <strong>' + logoScore + '/10</strong> logo! Kamu dapat cap HIMA TI!', [
-      '<button onclick="closeOverlay()" class="w-full bg-emerald-600 hover:bg-emerald-500 py-3 rounded-xl font-bold">Ambil Cap! 🎉</button>',
-      '<button onclick="startGame(\'logo\')" class="w-full bg-slate-700 hover:bg-slate-600 py-3 rounded-xl font-bold mt-2">Main Lagi</button>'
-    ]);
-  }
-}
-
-// ==================== TYPING RACE ====================
-const typingSentences = [
+// ===== TYPING =====
+const tySentences = [
   "HIMA TI adalah keluarga besar mahasiswa Teknologi Informasi",
   "Teknologi Informasi jurusan terbaik di kampus kita",
   "Selamat datang mahasiswa baru angkatan dua ribu dua puluh enam",
@@ -545,117 +431,67 @@ const typingSentences = [
   "Dari mahasiswa untuk mahasiswa itulah semangat HIMA TI",
   "Kode program adalah bahasa masa depan generasi muda",
 ];
+let tySentence='', tyStart=null, tyActive=false, tyInterval=null;
 
-let typingSentence = '';
-let typingStartTime = null;
-let typingActive = false;
-let typingInterval = null;
+function tyReset() { tyActive=false; clearInterval(tyInterval); }
 
-function startTypingGame() {
-  typingSentence = typingSentences[Math.floor(Math.random() * typingSentences.length)];
-  typingStartTime = null;
-  typingActive = true;
-  clearInterval(typingInterval);
-  
-  document.getElementById('typing-result').classList.add('game-hidden');
-  document.getElementById('typing-area').style.display = '';
-  
-  // Render sentence with character spans
-  const el = document.getElementById('typing-text');
-  el.innerHTML = typingSentence.split('').map((ch, i) => 
-    `<span id="tc${i}" class="text-slate-400">${ch === ' ' ? '&nbsp;' : ch}</span>`
-  ).join('');
-  
-  const input = document.getElementById('typing-input');
-  input.value = '';
-  input.focus();
-  document.getElementById('typing-wpm').textContent = '0';
-  document.getElementById('typing-time').textContent = '0.0';
+function tyStart() {
+  tySentence = tySentences[Math.random()*tySentences.length|0];
+  tyStart = null; tyActive = true;
+  clearInterval(tyInterval);
+  document.getElementById('ty-end').style.display = 'none';
+  document.getElementById('ty-play').style.display = '';
+  document.getElementById('ty-text').innerHTML = tySentence.split('').map((c,i)=>`<span id="c${i}" style="color:var(--muted)">${c===' '?'&nbsp;':c}</span>`).join('');
+  const inp = document.getElementById('ty-input');
+  inp.value = ''; inp.focus();
+  document.getElementById('ty-wpm').textContent = '0';
+  document.getElementById('ty-time').textContent = '0.0';
 }
 
-function resetTyping() {
-  typingActive = false;
-  clearInterval(typingInterval);
-}
-
-document.getElementById('typing-input').addEventListener('input', function() {
-  if (!typingActive) return;
-  
-  if (!typingStartTime) {
-    typingStartTime = Date.now();
-    typingInterval = setInterval(updateTypingStats, 100);
+document.getElementById('ty-input').addEventListener('input', function() {
+  if (!tyActive) return;
+  if (!tyStart) {
+    tyStart = Date.now();
+    tyInterval = setInterval(()=>{
+      const s = (Date.now()-tyStart)/1000;
+      const w = this.value.split(' ').filter(x=>x).length;
+      document.getElementById('ty-wpm').textContent = s>0 ? Math.round(w/s*60) : 0;
+      document.getElementById('ty-time').textContent = s.toFixed(1);
+    }, 100);
   }
-  
-  const typed = this.value;
-  
-  // Highlight characters
-  for (let i = 0; i < typingSentence.length; i++) {
-    const ch = document.getElementById('tc' + i);
-    if (i < typed.length) {
-      ch.className = typed[i] === typingSentence[i] ? 'text-emerald-400 font-bold' : 'text-red-400 font-bold underline';
-    } else if (i === typed.length) {
-      ch.className = 'text-white bg-slate-600 px-0.5 rounded';
-    } else {
-      ch.className = 'text-slate-400';
-    }
+  const t = this.value;
+  for (let i=0;i<tySentence.length;i++) {
+    const ch = document.getElementById('c'+i);
+    if (i<t.length) ch.style.color = t[i]===tySentence[i] ? 'var(--green)' : 'var(--red)';
+    else if (i===t.length) { ch.style.color='#fff'; ch.style.background='var(--border)'; ch.style.borderRadius='2px'; }
+    else { ch.style.color='var(--muted)'; ch.style.background=''; }
   }
-  
-  // Check completion
-  if (typed.length >= typingSentence.length) {
-    typingActive = false;
-    clearInterval(typingInterval);
-    
-    // Check accuracy
-    let correct = 0;
-    for (let i = 0; i < typingSentence.length; i++) {
-      if (typed[i] === typingSentence[i]) correct++;
-    }
-    const accuracy = correct / typingSentence.length;
-    
-    const elapsed = (Date.now() - typingStartTime) / 1000;
-    const words = typingSentence.split(' ').length;
-    const wpm = Math.round((words / elapsed) * 60);
-    const finalWpm = Math.round(wpm * accuracy);
-    
-    endTypingGame(finalWpm, elapsed);
+  if (t.length >= tySentence.length) {
+    tyActive = false; clearInterval(tyInterval);
+    let ok=0; for(let i=0;i<tySentence.length;i++) if(t[i]===tySentence[i]) ok++;
+    const acc = ok/tySentence.length;
+    const s = (Date.now()-tyStart)/1000;
+    const wpm = Math.round(tySentence.split(' ').length/s*60*acc);
+    tyEnd(wpm, s);
   }
 });
 
-function updateTypingStats() {
-  if (!typingStartTime) return;
-  const elapsed = (Date.now() - typingStartTime) / 1000;
-  const typed = document.getElementById('typing-input').value;
-  const words = typed.split(' ').filter(w => w.length > 0).length;
-  const wpm = elapsed > 0 ? Math.round((words / elapsed) * 60) : 0;
-  
-  document.getElementById('typing-wpm').textContent = wpm;
-  document.getElementById('typing-time').textContent = elapsed.toFixed(1);
-}
-
-function endTypingGame(wpm, elapsed) {
-  document.getElementById('typing-area').style.display = 'none';
+function tyEnd(wpm, s) {
+  document.getElementById('ty-play').style.display = 'none';
   const won = wpm > 30;
-  
-  document.getElementById('typing-result-emoji').textContent = won ? '⌨️' : '🐢';
-  document.getElementById('typing-result-wpm').textContent = wpm;
-  document.getElementById('typing-result-wpm').className = 'text-5xl font-900 mb-1 ' + (won ? 'text-emerald-400' : 'text-red-400');
-  document.getElementById('typing-result-time').textContent = 'Waktu: ' + elapsed.toFixed(1) + ' detik';
-  document.getElementById('typing-result-status').textContent = won ? 'Menang! Kamu dapat cap!' : 'Belum > 30 WPM, coba lagi!';
-  document.getElementById('typing-result-status').className = 'text-lg font-bold mb-4 ' + (won ? 'text-emerald-400' : 'text-amber-400');
-  document.getElementById('typing-result').classList.remove('game-hidden');
-  
-  saveScore('typing', wpm, ' WPM');
-  
-  if (won) {
-    showOverlay('⌨️', 'CEPAT!', 'Typing speed <strong>' + wpm + ' WPM</strong>! Kamu dapat cap HIMA TI!', [
-      '<button onclick="closeOverlay()" class="w-full bg-emerald-600 hover:bg-emerald-500 py-3 rounded-xl font-bold">Ambil Cap! 🎉</button>',
-      '<button onclick="startGame(\'typing\')" class="w-full bg-slate-700 hover:bg-slate-600 py-3 rounded-xl font-bold mt-2">Main Lagi</button>'
-    ]);
-  }
+  const sc = document.getElementById('ty-end-wpm');
+  sc.textContent = wpm; sc.style.color = won ? 'var(--green)' : 'var(--red)';
+  document.getElementById('ty-end-time').textContent = s.toFixed(1) + ' detik';
+  const st = document.getElementById('ty-end-status');
+  st.textContent = won ? 'Kamu dapat cap!' : 'Belum di atas 30 WPM, coba lagi';
+  st.style.color = won ? 'var(--green)' : 'var(--amber)';
+  document.getElementById('ty-end').style.display = '';
+  saveLB('typing', wpm, ' WPM');
+  if (won) showOv('Kamu menang', 'Typing speed <strong>'+wpm+' WPM</strong>. Tunjukkan ke pengurus untuk ambil cap.', '<button onclick="closeOv()" class="btn btn-green" style="width:100%;">Tutup</button>');
 }
 
-// ==================== INIT ====================
-renderLeaderboard();
+// ===== INIT =====
+renderLB();
 </script>
 </body>
 </html>
